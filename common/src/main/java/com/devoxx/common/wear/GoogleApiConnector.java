@@ -85,6 +85,21 @@ public class GoogleApiConnector  {
         });
     }
 
+    public void deleteAllItems(final String dataPath) {
+
+        connectWearApi(new Runnable() {
+            @Override
+            public void run() {
+                Uri uri = new Uri.Builder()
+                        .scheme(PutDataRequest.WEAR_URI_SCHEME)
+                        .path(dataPath)
+                        .build();
+
+                Wearable.DataApi.deleteDataItems(mApiClient, uri, DataApi.FILTER_PREFIX);
+            }
+        });
+    }
+
 
 
 
