@@ -1,9 +1,5 @@
 package com.devoxx.data.downloader;
 
-import android.content.Context;
-
-import com.devoxx.common.utils.Constants;
-import com.devoxx.common.wear.GoogleApiConnector;
 import com.devoxx.connection.Connection;
 import com.devoxx.connection.DevoxxApi;
 import com.devoxx.connection.model.SlotApiModel;
@@ -13,7 +9,6 @@ import com.google.gson.Gson;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.RootContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,26 +31,18 @@ public class SlotsDownloader {
 	@Bean
 	SlotsCache slotsCache;
 
-	@RootContext
-	Context context;
-
-	private GoogleApiConnector mGoogleApiConnector;
+	public List<SlotApiModel> forceDownloadTalks(String confCode) throws IOException {
+		return downloadAllData(confCode);
+	}
 
 	public List<SlotApiModel> downloadTalks(String confCode) throws IOException {
 		final List<SlotApiModel> result;
-
-		mGoogleApiConnector = new GoogleApiConnector(context);
 
 		if (slotsCache.isValid(confCode)) {
 			result = slotsCache.getData(confCode);
 		} else {
 			result = downloadAllData(confCode);
-
-			// clear the cache used by the wearable device to display the
-			mGoogleApiConnector.deleteAllItems(Constants.CHANNEL_ID);
 		}
-
-		mGoogleApiConnector.disconnect();
 
 		return result;
 	}

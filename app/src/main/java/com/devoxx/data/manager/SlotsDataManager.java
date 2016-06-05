@@ -3,9 +3,11 @@ package com.devoxx.data.manager;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
+import com.devoxx.R;
 import com.devoxx.connection.model.SlotApiModel;
 import com.devoxx.data.dao.SlotDao;
 import com.devoxx.data.downloader.SlotsDownloader;
+import com.devoxx.utils.InfoUtil;
 import com.devoxx.utils.Logger;
 
 import org.androidannotations.annotations.AfterInject;
@@ -30,6 +32,9 @@ public class SlotsDataManager extends AbstractDataManager<SlotApiModel> {
 
 	@Bean
 	SlotDao slotDao;
+
+	@Bean
+	InfoUtil infoUtil;
 
 	private List<SlotApiModel> allSlots = new ArrayList<>();
 	private List<SlotApiModel> talks = new ArrayList<>();
@@ -87,8 +92,8 @@ public class SlotsDataManager extends AbstractDataManager<SlotApiModel> {
 		slotDao.clearData();
 	}
 
-	public void updateSlotsInBackground(String confCode) {
-		final HandlerThread handlerThread = new HandlerThread("updateSlotsInBackground");
+	public void updateSlotsAsync(String confCode) {
+		final HandlerThread handlerThread = new HandlerThread("updateSlotsAsync");
 		handlerThread.start();
 		final Looper looper = handlerThread.getLooper();
 		new Handler(looper).post(() -> {
@@ -96,6 +101,21 @@ public class SlotsDataManager extends AbstractDataManager<SlotApiModel> {
 				slotsDownloader.downloadTalks(confCode);
 			} catch (IOException e) {
 				Logger.exc(e);
+			}
+		});
+	}
+
+	public void forceUpdateSlotsAsync(String confCode) {
+		final HandlerThread handlerThread = new HandlerThread("forceUpdateSlotsAsync");
+		handlerThread.start();
+		final Looper looper = handlerThread.getLooper();
+		new Handler(looper).post(() -> {
+			try {
+				infoUtil.showToast(R.string.updating_schedule_data);
+				slotsDownloader.forceDownloadTalks(confCode);
+				infoUtil.showToast(R.string.updated_schedule_data);
+			} catch (IOException e) {
+				infoUtil.showToast(R.string.connection_error);
 			}
 		});
 	}
