@@ -7,4 +7,9 @@
 
     <Preference
         android:key="@string/settings_user_code"/>
+
+    <Preference
+        android:key="@string/settings_refresh_schedule_data_key"
+        android:summary="Refresh schedule data"
+        android:title="Refresh schedule data"/>
 </PreferenceScreen>

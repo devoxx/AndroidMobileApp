@@ -31,6 +31,10 @@ public class SlotsDownloader {
 	@Bean
 	SlotsCache slotsCache;
 
+	public List<SlotApiModel> forceDownloadTalks(String confCode) throws IOException {
+		return downloadAllData(confCode);
+	}
+
 	public List<SlotApiModel> downloadTalks(String confCode) throws IOException {
 		final List<SlotApiModel> result;
 

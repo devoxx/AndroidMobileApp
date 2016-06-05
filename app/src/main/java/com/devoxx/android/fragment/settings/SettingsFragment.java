@@ -55,12 +55,12 @@ public class SettingsFragment extends PreferenceFragment {
 
 	@PreferenceClick(R.string.settings_change_conf_key) void onChangeConferenceClick() {
 		ActivityCompat.finishAffinity(getActivity());
-
 		conferenceManager.requestConferenceChange();
+		SelectorActivity_.intent(this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP).start();
+	}
 
-		SelectorActivity_.intent(this)
-				.flags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-				.start();
+	@PreferenceClick(R.string.settings_refresh_schedule_data_key) void onRefreshScheduleDataClick() {
+		conferenceManager.forceUpdateScheduleData();
 	}
 
 	private void setupUserCodePreference() {

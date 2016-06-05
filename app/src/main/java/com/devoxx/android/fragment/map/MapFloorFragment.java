@@ -41,7 +41,7 @@ public class MapFloorFragment extends BaseFragment {
 							Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 						if (getActivity() != null && imageView != null) {
 							final PhotoViewAttacher pa = new PhotoViewAttacher(imageView);
-							pa.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+							pa.setScaleType(ImageView.ScaleType.CENTER_CROP);
 							pa.setScaleLevels(1f, 2f, 4f);
 						}
 						return false;

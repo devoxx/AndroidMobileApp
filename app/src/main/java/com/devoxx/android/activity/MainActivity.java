@@ -170,7 +170,7 @@ public class MainActivity extends BaseActivity {
 				.handleAppResume(conferenceManager.getActiveConference()
 						.get().getIntegrationId(), this);
 
-		conferenceManager.updateSlotsIfNeededInBackground();
+		conferenceManager.updateSlotsIfNeededAsync();
 	}
 
 	@Receiver(actions = {HuntlyPresenter.INTEGRATION_DIALOG_DISMISSED, HuntlyController.USER_DATA_UPDATED},
