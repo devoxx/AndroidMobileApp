@@ -14,7 +14,7 @@ public interface IntegrationController {
 
 	void talkVoted(String confCode, Activity activity);
 
-	void userRegistered(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor);
+	void userRegistered(String confId, String finalCode, RegisterUserActivity.BaseExtractor infoExtractor);
 
 	void setupIntegrationToolbarMenuItem(Menu menu);
 

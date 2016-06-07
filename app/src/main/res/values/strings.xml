@@ -69,16 +69,17 @@
     <string name="register_success_message">Code saved! Now you can vote for a talk.</string>
     <string name="register_failed_message">Code can\'t be empty!</string>
     <string name="user_code_cleared">Code has been cleared!</string>
-    <string name="user_scan_qr">Scan QR badge</string>
-    <string name="user_code_clear">Clear QR code</string>
-    <string name="user_code_scan_desc">Open scanner and scans users QR code from the badge.</string>
-    <string name="user_code_clear_desc">Clears previously scanned QR code.</string>
+    <string name="user_scan_qr">Scan QR/NFC badge</string>
+    <string name="user_code_clear">Clear QR/NFC code</string>
+    <string name="user_code_scan_desc">Open scanner and scans users QR/NFC code from the badge.</string>
+    <string name="user_code_clear_desc">Clears previously scanned QR/NFC code.</string>
     <string name="play_more">Play More</string>
     <string name="huntly">Huntly points</string>
     <string name="huntly_welcome_bonus">Welcome Bonus</string>
     <string name="huntly_points_won">You just won</string>
-    <string name="updating_schedule_data">Updating schedule data...</string>
+    <string name="updating_schedule_data">Updating schedule data…</string>
     <string name="updated_schedule_data">Schedule data updated!</string>
+    <string name="general_back">Back</string>
 
     <string-array name="drawer_menu_schedule_time_label">
         <item>Schedule by event time</item>
@@ -88,4 +89,8 @@
         <item>My schedule</item>
         <item>Feedback</item>
     </string-array>
+
+    <string name="nfc_connection_waiting">Waiting for NFC tag…</string>
+    <string name="nfc_scanning_error">Can\'t read NFC band!</string>
+    <string name="internet_connection_should_be_available_nduring_scanning_nfc_band">(internet connection should be available\nduring scanning NFC band)</string>
 </resources>

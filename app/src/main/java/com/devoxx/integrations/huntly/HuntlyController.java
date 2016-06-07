@@ -64,8 +64,8 @@ public class HuntlyController {
 		}
 	}
 
-	@Background
-	void updateUserProfileAsync(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	@Background void updateUserProfileAsync(String confId, String finalCode,
+																					RegisterUserActivity.BaseExtractor infoExtractor) {
 		if (!isEventIdAvailable()) {
 			return;
 		}
@@ -285,7 +285,9 @@ public class HuntlyController {
 		return result;
 	}
 
-	private List<HuntlyProfileProperty> createProperties(String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	private List<HuntlyProfileProperty> createProperties(
+			String finalCode,
+			RegisterUserActivity.BaseExtractor infoExtractor) {
 		final List<HuntlyProfileProperty> result = new ArrayList<>();
 		appendProperty(infoExtractor.getUserId().first, finalCode, result);
 		appendProperty(infoExtractor.getUserName(), result);

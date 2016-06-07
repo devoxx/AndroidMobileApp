@@ -79,6 +79,11 @@
         <activity
             android:name="io.scalac.scanner.BarcodeCaptureActivity"/>
 
+        <activity
+            android:name=".devoxx_pl.nfc.NfcConnectionActivity_"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+
         <receiver
             android:name=".android.receiver.AlarmReceiver_"
             android:enabled="true"

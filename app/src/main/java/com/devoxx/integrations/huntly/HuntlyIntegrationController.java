@@ -44,7 +44,8 @@ public class HuntlyIntegrationController implements IntegrationController {
 	}
 
 	@Override
-	public void userRegistered(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	public void userRegistered(String confId, String finalCode,
+														 RegisterUserActivity.BaseExtractor infoExtractor) {
 		huntlyController.updateUserProfileAsync(confId, finalCode, infoExtractor);
 	}
 
