@@ -8,6 +8,7 @@ import com.devoxx.android.adapter.schedule.model.creator.ScheduleLineupDataCreat
 import com.devoxx.android.fragment.common.BaseListFragment;
 import com.devoxx.connection.model.SlotApiModel;
 import com.devoxx.data.DataInformation_;
+import com.devoxx.data.conference.ConferenceManager;
 import com.devoxx.data.schedule.filter.ScheduleFilterManager;
 import com.devoxx.data.schedule.search.SearchManager;
 import com.devoxx.navigation.Navigator;
@@ -87,7 +88,7 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 		}
 
 		final long lastCheck = dataInformation.lastRunningSessionCheckTime().get();
-		final long now = System.currentTimeMillis();
+		final long now = ConferenceManager.getNow();
 		final long diffMs = now - lastCheck;
 		final boolean shouldForceCheck = Math.signum(diffMs) == -1; // User changed time in system.
 

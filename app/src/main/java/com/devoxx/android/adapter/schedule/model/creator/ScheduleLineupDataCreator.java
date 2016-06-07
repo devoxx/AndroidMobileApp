@@ -46,7 +46,7 @@ public class ScheduleLineupDataCreator {
 	@NonNull
 	public List<ScheduleItem> prepareResult(List<SlotApiModel> slotApiModels) {
 		final Map<TripleTuple<Long, Long, String>, List<SlotApiModel>> map = Stream.of(slotApiModels)
-				.sorted((lhs, rhs) -> lhs.fromTimeMillis < rhs.fromTimeMillis ? -1 : (lhs.fromTimeMillis == rhs.fromTimeMillis ? 0 : 1))
+				.sorted((lhs, rhs) -> lhs.fromTimeMs() < rhs.fromTimeMs() ? -1 : (lhs.fromTimeMs() == rhs.fromTimeMs() ? 0 : 1))
 				.collect(triplesCollector);
 
 		final List<TripleTuple<Long, Long, String>> sortedKeys = Stream.of(map.keySet())
@@ -125,7 +125,7 @@ public class ScheduleLineupDataCreator {
 		return Collectors.groupingBy(new Function<SlotApiModel, TripleTuple<Long, Long, String>>() {
 			@Override
 			public TripleTuple<Long, Long, String> apply(SlotApiModel value) {
-				return new TripleTuple<>(value.fromTimeMillis, value.toTimeMillis, value.slotId);
+				return new TripleTuple<>(value.fromTimeMs(), value.toTimeMs(), value.slotId);
 			}
 		});
 	}

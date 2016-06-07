@@ -13,6 +13,9 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.SystemService;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -28,7 +31,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -97,16 +99,20 @@ public class NotificationsManager {
 		addInfoToCache(cfg);
 
 		if (cfg.isWithToast()) {
-			final DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
-			final DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
-			final String date = dateFormat.format(cfg.getTalkNotificationTime());
-			String time = timeFormat.format(cfg.getTalkNotificationTime());
 
-			final boolean isNotToday = !dateFormat.format(getNowMillis()).equals(date);
+			final DateTime talkNotificationTime = new DateTime(cfg.getTalkNotificationTime());
 
-			if (isNotToday) {
-				time = "\n" + date + " " + time;
+			String pattern;
+
+			final boolean isFuture = talkNotificationTime.isAfter(DateTime.now());
+			if (isFuture) {
+				pattern = "dd/MM/YY HH:mm";
+			} else {
+				pattern = "HH:mm";
 			}
+
+			final DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+			final String time = talkNotificationTime.toString(dtf);
 
 			Toast.makeText(context, context.getString(R.string.toast_notification_set_at) +
 					" " + time, Toast.LENGTH_SHORT).show();
@@ -378,7 +384,7 @@ public class NotificationsManager {
 	}
 
 	private static long getNowMillis() {
-		return System.currentTimeMillis();
+		return DateTime.now().getMillis();
 	}
 
 	static class NotificationConfiguration {
@@ -431,8 +437,8 @@ public class NotificationsManager {
 			talkSlotId = slotApiModel.slotId;
 			talkTitle = slotApiModel.talk.title;
 			talkRoom = slotApiModel.roomName;
-			talkStartTime = slotApiModel.fromTimeMillis;
-			talkEndTime = slotApiModel.toTimeMillis;
+			talkStartTime = slotApiModel.fromTimeMs();
+			talkEndTime = slotApiModel.toTimeMs();
 			withToast = toastInfo;
 
 			final long beforeTalkNotificationTime = FAKE_TIME

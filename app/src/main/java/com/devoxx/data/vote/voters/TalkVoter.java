@@ -113,7 +113,7 @@ public class TalkVoter implements ITalkVoter {
 
 	@Override public boolean canVoteForTalk(SlotApiModel slotModel) {
 		final DateTime now = new DateTime(ConferenceManager.getNow());
-		final DateTime talkStart = new DateTime(slotModel.fromTimeMillis);
+		final DateTime talkStart = slotModel.fromTime();
 		return now.isAfter(talkStart);
 	}
 

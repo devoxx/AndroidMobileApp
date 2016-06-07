@@ -38,13 +38,11 @@ public class SpeakerDetailsTalkItem extends LinearLayout {
 		setupBackground();
 	}
 
-	public void setupView(String titleVal, String subtitleVal, long fromMs, long toMs, String placeVal) {
+	public void setupView(String titleVal, String subtitleVal, DateTime startDate, DateTime endDate, String placeVal) {
 		title.setText(titleVal);
 		subtitle.setText(subtitleVal);
 		place.setText(placeVal);
 
-		final DateTime startDate = new DateTime(fromMs);
-		final DateTime endDate = new DateTime(toMs);
 		final String startDateString = startDate.toString(DateTimeFormat.forPattern(TalkFragment.DATE_TEXT_FORMAT));
 		final String startTimeString = startDate.toString(DateTimeFormat.forPattern(TalkFragment.TIME_TEXT_FORMAT));
 		final String endTimeString = endDate.toString(DateTimeFormat.forPattern(TalkFragment.TIME_TEXT_FORMAT));

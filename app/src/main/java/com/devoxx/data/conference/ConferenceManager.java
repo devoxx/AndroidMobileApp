@@ -171,6 +171,36 @@ public class ConferenceManager {
 		return getActiveConference().isPresent();
 	}
 
+	public void setupDefaultTimeZone() {
+		final Optional<RealmConference> optional = getActiveConference();
+		if (optional.isPresent()) {
+			final RealmConference conference = optional.get();
+			final String timeZoneId;
+			switch (conference.getId()) {
+				default:
+				case "DevoxxFR2016":
+					timeZoneId = "Europe/Paris";
+					break;
+				case "DevoxxUK2016":
+					timeZoneId = "Europe/London";
+					break;
+				case "DevoxxPL2015":
+				case "DevoxxPL2016":
+					timeZoneId = "Europe/Warsaw";
+					break;
+				case "DV15":
+					timeZoneId = "Europe/Brussels";
+					break;
+				case "DevoxxMA2015":
+				case "DevoxxMA2016":
+					timeZoneId = "Europe/Morocco";
+					break;
+			}
+
+			DateTimeZone.setDefault(DateTimeZone.forID(timeZoneId));
+		}
+	}
+
 	private boolean isDownloadingAllConferencesData = false;
 
 	private WeakReference<IConferencesListener> allConferencesDataListener;
@@ -237,6 +267,8 @@ public class ConferenceManager {
 			createSpeakersRepository();
 
 			saveActiveConference(conferenceApiModel);
+			setupDefaultTimeZone();
+
 			final List<ConferenceDay> conferenceDays = getConferenceDays();
 			scheduleFilterManager.createDayFiltersDefinition(conferenceDays);
 
@@ -356,7 +388,7 @@ public class ConferenceManager {
 	}
 
 	public static long getNow() {
-		return System.currentTimeMillis();
+		return DateTime.now().getMillis();
 	}
 
 	private void clearFiltersDefinitions() {
@@ -397,8 +429,7 @@ public class ConferenceManager {
 	}
 
 	public static DateTime parseConfDate(String stringDate) {
-		DateTimeFormatter formatter = DateTimeFormat.forPattern(DATE_FORMAT)
-				.withZone(DateTimeZone.forID("Europe/Paris"));
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(DATE_FORMAT);
 		return formatter.parseDateTime(stringDate);
 	}
 }

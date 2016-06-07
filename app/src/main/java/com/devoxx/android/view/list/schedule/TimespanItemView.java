@@ -5,6 +5,9 @@ import com.devoxx.R;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.ColorRes;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -14,15 +17,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 @EViewGroup(R.layout.list_item_timespan)
 public class TimespanItemView extends LinearLayout {
 
 	private static final String TIME_FORMAT_RAW = "HH:mm";
-	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat(
-			TIME_FORMAT_RAW, Locale.getDefault());
+	private static final DateTimeFormatter dtf = DateTimeFormat.forPattern(TIME_FORMAT_RAW);
+
 	public static final String TIMESPAN_PLACEHOLDER = "%s-%s";
 	public static final String RUNNING_TIMESPAN_PLACEHOLDER = "NOW: %s to %s";
 
@@ -69,7 +69,9 @@ public class TimespanItemView extends LinearLayout {
 		runningIndicator.setVisibility(running ? View.VISIBLE : GONE);
 	}
 
+	private static final DateTime DATE_TIME = new DateTime();
+
 	public static String formatTime(long time) {
-		return TIME_FORMAT.format(time);
+		return DATE_TIME.withMillis(time).toString(dtf);
 	}
 }

@@ -231,8 +231,8 @@ public class WearService extends WearableListenerService {
 
 			// process the data
 			scheduleDataMap.putString(Constants.DATAMAP_ROOM_NAME, slot.roomName);
-			scheduleDataMap.putLong(Constants.DATAMAP_FROM_TIME_MILLIS, slot.fromTimeMillis);
-			scheduleDataMap.putLong(Constants.DATAMAP_TO_TIME_MILLIS, slot.toTimeMillis);
+			scheduleDataMap.putLong(Constants.DATAMAP_FROM_TIME_MILLIS, slot.fromTimeMs());
+			scheduleDataMap.putLong(Constants.DATAMAP_TO_TIME_MILLIS, slot.toTimeMs());
 
 			if (slot.isBreak()) {
 				DataMap breakDataMap = new DataMap();

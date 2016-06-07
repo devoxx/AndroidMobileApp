@@ -43,8 +43,8 @@ public class BreakItemView extends LinearLayout {
 		}
 		label.setText(finalBreakLabel);
 
-		final String startString = TimespanItemView.formatTime(slotModel.fromTimeMillis);
-		final String endString = TimespanItemView.formatTime(slotModel.toTimeMillis);
+		final String startString = TimespanItemView.formatTime(slotModel.fromTimeMs());
+		final String endString = TimespanItemView.formatTime(slotModel.toTimeMs());
 		timeLabel.setText(String.format(TimespanItemView.TIMESPAN_PLACEHOLDER, startString, endString));
 	}
 

@@ -429,8 +429,8 @@ public class TalkFragment extends BaseFragment implements AppBarLayout.OnOffsetC
 	}
 
 	private View createDateTimeSection(SlotApiModel slotModel) {
-		final DateTime startDate = new DateTime(slotModel.fromTimeMillis);
-		final DateTime endDate = new DateTime(slotModel.toTimeMillis);
+		final DateTime startDate = slotModel.fromTime();
+		final DateTime endDate = slotModel.toTime();
 		final String startDateString = startDate.toString(DateTimeFormat.forPattern(DATE_TEXT_FORMAT));
 		final String startTimeString = startDate.toString(DateTimeFormat.forPattern(TIME_TEXT_FORMAT));
 		final String endTimeString = endDate.toString(DateTimeFormat.forPattern(TIME_TEXT_FORMAT));

@@ -37,5 +37,7 @@ public class MainApplication extends Application {
 		integrationProvider.provideIntegrationController().init();
 		Fabric.with(this, new Crashlytics());
 		JodaTimeAndroid.init(this);
+
+		conferenceManager.setupDefaultTimeZone();
 	}
 }

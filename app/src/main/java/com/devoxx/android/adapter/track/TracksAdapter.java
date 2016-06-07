@@ -81,9 +81,9 @@ public class TracksAdapter extends RecyclerView.Adapter<BaseTrackHolder> {
 	}
 
 	private boolean isRunningItem(SlotApiModel slot) {
-		final long currentTime = conferenceManager.getNow();
-		return slot.fromTimeMillis <= currentTime
-				&& slot.toTimeMillis >= currentTime;
+		final long currentTime = ConferenceManager.getNow();
+		return slot.fromTimeMs() <= currentTime
+				&& slot.toTimeMs() >= currentTime;
 	}
 
 	public void setItemClickListener(ListAdapterClickListener listener) {

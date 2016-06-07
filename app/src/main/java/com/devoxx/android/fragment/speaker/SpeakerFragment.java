@@ -18,7 +18,6 @@ import com.devoxx.data.model.RealmTalk;
 import com.devoxx.navigation.Navigator;
 import com.devoxx.utils.DeviceUtil;
 import com.devoxx.utils.InfoUtil;
-import com.devoxx.utils.Logger;
 import com.devoxx.utils.ViewUtils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -176,7 +175,7 @@ public class SpeakerFragment extends BaseFragment implements AppBarLayout.OnOffs
 					final SlotApiModel slotApiModel = slotModelOpt.get();
 					final SpeakerDetailsTalkItem item = SpeakerDetailsTalkItem_.build(getActivity());
 					item.setupView(talkModel.getTrack(), talkModel.getTitle(),
-							slotApiModel.fromTimeMillis, slotApiModel.toTimeMillis, slotApiModel.roomName);
+							slotApiModel.fromTime(), slotApiModel.toTime(), slotApiModel.roomName);
 					item.setOnClickListener(v ->
 							navigator.openTalkDetails(getActivity(), slotApiModel, true));
 					talkSection.addView(item);

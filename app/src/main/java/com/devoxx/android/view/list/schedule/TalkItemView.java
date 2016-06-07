@@ -105,7 +105,7 @@ public class TalkItemView extends LinearLayout {
 			track.setText(talkModel.track);
 			place.setText(slotModel.roomName);
 
-			final DateTime date = new DateTime(slotModel.fromTimeMillis);
+			final DateTime date = slotModel.fromTime();
 			final String dateRaw = date.toString(DateTimeFormat.forPattern(DAY_TEXT_FORMAT));
 			time.setText(String.format("%s, %s-%s", dateRaw, slotModel.fromTime, slotModel.toTime));
 

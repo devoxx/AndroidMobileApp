@@ -80,7 +80,8 @@ public class SlotsDataManager extends AbstractDataManager<SlotApiModel> {
 		final DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
 
 		return Stream.of(allSlots)
-				.filter(value -> dateComparator.compare(requestedDate, tmpDate.withMillis(value.fromTimeMillis)) == 0)
+				.filter(value -> dateComparator.compare(requestedDate, tmpDate.withMillis(
+						value.fromTimeMs())) == 0)
 				.filter(value1 -> !value1.notAllocated)
 				.collect(Collectors.<SlotApiModel>toList());
 	}

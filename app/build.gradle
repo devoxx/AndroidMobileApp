@@ -145,7 +145,7 @@ dependencies {
 
     compile 'com.annimon:stream:1.0.8'
 
-    compile 'net.danlew:android.joda:2.9.0'
+    compile 'net.danlew:android.joda:2.9.3.1'
 
     apt 'org.androidannotations:androidannotations:4.0.0'
     compile 'org.androidannotations:androidannotations-api:4.0.0'

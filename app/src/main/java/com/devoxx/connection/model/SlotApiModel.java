@@ -3,6 +3,8 @@ package com.devoxx.connection.model;
 import com.annimon.stream.function.Predicate;
 import com.google.gson.annotations.SerializedName;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 
 public class SlotApiModel implements Serializable {
@@ -22,9 +24,25 @@ public class SlotApiModel implements Serializable {
 	public String slotId;
 	public String day;
 	public boolean notAllocated;
-	public long fromTimeMillis;
-	public long toTimeMillis;
+	long fromTimeMillis;
+	long toTimeMillis;
 	public int roomCapacity;
+
+	public DateTime fromTime() {
+		return new DateTime(fromTimeMillis);
+	}
+
+	public DateTime toTime() {
+		return new DateTime(toTimeMillis);
+	}
+
+	public long fromTimeMs() {
+		return fromTimeMillis;
+	}
+
+	public long toTimeMs() {
+		return toTimeMillis;
+	}
 
 	public boolean isBreak() {
 		return slotBreak != null && talk == null;

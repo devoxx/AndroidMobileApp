@@ -100,7 +100,7 @@ public class TracksListFragment extends BaseListFragment implements NeededUpdate
 
 		return Stream.of(slots)
 				.filter(value -> {
-					final DateTime rhs = slotDate.withMillis(value.fromTimeMillis);
+					final DateTime rhs = slotDate.withMillis(value.fromTimeMs());
 					for (RealmScheduleDayItemFilter dayFilter : dayFilters) {
 						final DateTime lhs = filterTime.withMillis(dayFilter.getDayMs());
 						if (DateUtils.isSameDay(lhs, rhs)) {
