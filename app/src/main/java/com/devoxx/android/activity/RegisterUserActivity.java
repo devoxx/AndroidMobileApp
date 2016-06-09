@@ -1,8 +1,12 @@
 package com.devoxx.android.activity;
 
 import com.devoxx.R;
+import com.devoxx.data.conference.ConferenceConstants;
 import com.devoxx.data.conference.ConferenceManager;
+import com.devoxx.data.register.BaseExtractor;
+import com.devoxx.data.register.DefaultExtractor;
 import com.devoxx.data.user.UserManager;
+import com.devoxx.devoxx_pl.data.DevoxxPlExtractor;
 import com.devoxx.devoxx_pl.connection.model.DevoxxPlUserModel;
 import com.devoxx.devoxx_pl.nfc.NfcConnectionActivity;
 import com.devoxx.devoxx_pl.nfc.NfcConnectionActivity_;
@@ -10,6 +14,7 @@ import com.devoxx.integrations.IntegrationProvider;
 import com.devoxx.utils.InfoUtil;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -17,7 +22,6 @@ import org.androidannotations.annotations.ViewById;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -48,9 +52,17 @@ public class RegisterUserActivity extends BaseActivity {
 	@ViewById(R.id.registerUserinput)
 	EditText codeInput;
 
+	@ViewById(R.id.registerUserViaNfc)
+	View nfcScanning;
+
 	private BaseExtractor infoExtractor = new BaseExtractor();
 
 	private static final int SCAN_NFC_RC = 39;
+
+	@AfterViews void afterViews() {
+		nfcScanning.setVisibility(ConferenceConstants.
+				isPoland(conferenceManager) ? View.VISIBLE : View.GONE);
+	}
 
 	@Click(R.id.registerUserViaNfc) void onNfcClick() {
 		NfcConnectionActivity_.intent(this).startForResult(SCAN_NFC_RC);
@@ -128,100 +140,4 @@ public class RegisterUserActivity extends BaseActivity {
 		codeInput.setVisibility(View.GONE);
 	}
 
-	public static class BaseExtractor {
-		private static final String EMPTY = "";
-
-		protected String userName() {
-			return EMPTY;
-		}
-
-		protected String userSurname() {
-			return EMPTY;
-		}
-
-		protected String userCompany() {
-			return EMPTY;
-		}
-
-		protected String userJob() {
-			return EMPTY;
-		}
-
-		protected String userId() {
-			return EMPTY;
-		}
-
-		public final Pair<String, String> getUserName() {
-			return new Pair<>("userName", userName());
-		}
-
-		public final Pair<String, String> getUserSurname() {
-			return new Pair<>("userSurname", userSurname());
-		}
-
-		public final Pair<String, String> getUserCompany() {
-			return new Pair<>("userCompany", userCompany());
-		}
-
-		public final Pair<String, String> getUserJob() {
-			return new Pair<>("userJob", userJob());
-		}
-
-		public final Pair<String, String> getUserId() {
-			return new Pair<>("userId", userId());
-		}
-	}
-
-	public static class DefaultExtractor extends BaseExtractor {
-		private String[] dataParts;
-
-		public DefaultExtractor(String data) {
-			dataParts = data.split(",");
-		}
-
-		@Override protected String userName() {
-			return extractIfExists(dataParts, 1);
-		}
-
-		@Override protected String userSurname() {
-			return extractIfExists(dataParts, 2);
-		}
-
-		@Override protected String userCompany() {
-			return extractIfExists(dataParts, 3);
-		}
-
-		@Override protected String userJob() {
-			return extractIfExists(dataParts, 5);
-		}
-
-		@Override protected String userId() {
-			return extractIfExists(dataParts, 0);
-		}
-
-		private String extractIfExists(String[] array, int index) {
-			return index >= array.length ? "" : array[index];
-		}
-	}
-
-	private static class DevoxxPlExtractor extends BaseExtractor {
-
-		private final DevoxxPlUserModel model;
-
-		private DevoxxPlExtractor(DevoxxPlUserModel model) {
-			this.model = model;
-		}
-
-		@Override protected String userName() {
-			return model.firstName;
-		}
-
-		@Override protected String userSurname() {
-			return model.lastName;
-		}
-
-		@Override protected String userId() {
-			return model.userId;
-		}
-	}
 }
