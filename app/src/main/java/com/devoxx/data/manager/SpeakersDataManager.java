@@ -10,6 +10,9 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -95,8 +98,15 @@ public class SpeakersDataManager extends AbstractDataManager<RealmSpeaker> {
 		realm.close();
 	}
 
+	@Nullable
 	public String imageUrlByUuid(String uuid) {
-		return uuidToImageUrl.get(uuid);
+		if (uuidToImageUrl == null) {
+			createSpeakersRepository();
+		}
+
+		final String result = uuidToImageUrl.get(uuid);
+
+		return TextUtils.isEmpty(result) ? "" : result;
 	}
 
 	public void createSpeakersRepository() {

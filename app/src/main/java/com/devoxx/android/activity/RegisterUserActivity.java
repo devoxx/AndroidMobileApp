@@ -1,19 +1,27 @@
 package com.devoxx.android.activity;
 
 import com.devoxx.R;
+import com.devoxx.data.conference.ConferenceConstants;
 import com.devoxx.data.conference.ConferenceManager;
+import com.devoxx.data.register.BaseExtractor;
+import com.devoxx.data.register.DefaultExtractor;
 import com.devoxx.data.user.UserManager;
+import com.devoxx.devoxx_pl.data.DevoxxPlExtractor;
+import com.devoxx.devoxx_pl.connection.model.DevoxxPlUserModel;
+import com.devoxx.devoxx_pl.nfc.NfcConnectionActivity;
+import com.devoxx.devoxx_pl.nfc.NfcConnectionActivity_;
 import com.devoxx.integrations.IntegrationProvider;
 import com.devoxx.utils.InfoUtil;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -44,7 +52,21 @@ public class RegisterUserActivity extends BaseActivity {
 	@ViewById(R.id.registerUserinput)
 	EditText codeInput;
 
-	private InfoExtractor infoExtractor = new EmptyExtractor();
+	@ViewById(R.id.registerUserViaNfc)
+	View nfcScanning;
+
+	private BaseExtractor infoExtractor = new BaseExtractor();
+
+	private static final int SCAN_NFC_RC = 39;
+
+	@AfterViews void afterViews() {
+		nfcScanning.setVisibility(ConferenceConstants.
+				isPoland(conferenceManager) ? View.VISIBLE : View.GONE);
+	}
+
+	@Click(R.id.registerUserViaNfc) void onNfcClick() {
+		NfcConnectionActivity_.intent(this).startForResult(SCAN_NFC_RC);
+	}
 
 	@Click(R.id.registerUserViaQr) void onScannerClick() {
 		final Intent intent = new Intent(this, BarcodeCaptureActivity.class);
@@ -88,14 +110,25 @@ public class RegisterUserActivity extends BaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (data != null && data.hasExtra(BarcodeCaptureActivity.BarcodeObject)) {
+		if (requestCode == SCAN_NFC_RC) {
+			handleNfcScanningResult(resultCode, data);
+		} else if (data != null && data.hasExtra(BarcodeCaptureActivity.BarcodeObject)) {
 			final Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-			infoExtractor = new InfoExtractor(barcode.displayValue);
-			fillUserInfo();
+			fillUserInfo(new DefaultExtractor(barcode.displayValue));
 		}
 	}
 
-	private void fillUserInfo() {
+	private void handleNfcScanningResult(int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			final DevoxxPlUserModel userModel = (DevoxxPlUserModel) data.
+					getSerializableExtra(NfcConnectionActivity.KEY_RESULT_MODEL);
+			fillUserInfo(new DevoxxPlExtractor(userModel));
+		}
+	}
+
+	private void fillUserInfo(BaseExtractor extractor) {
+		infoExtractor = extractor;
+
 		final String userId = infoExtractor.getUserId().second;
 		final String userCompany = infoExtractor.getUserCompany().second;
 		final String userName = infoExtractor.getUserName().second;
@@ -107,61 +140,4 @@ public class RegisterUserActivity extends BaseActivity {
 		codeInput.setVisibility(View.GONE);
 	}
 
-	public static class InfoExtractor {
-		private String[] dataParts;
-
-		public InfoExtractor(String data) {
-			dataParts = data.split(",");
-		}
-
-		public Pair<String, String> getUserName() {
-			return new Pair<>("userName", extractIfExists(dataParts, 1));
-		}
-
-		public Pair<String, String> getUserSurname() {
-			return new Pair<>("userSurname", extractIfExists(dataParts, 2));
-		}
-
-		public Pair<String, String> getUserCompany() {
-			return new Pair<>("userCompany", extractIfExists(dataParts, 3));
-		}
-
-		public Pair<String, String> getUserJob() {
-			return new Pair<>("userJob", extractIfExists(dataParts, 5));
-		}
-
-		public Pair<String, String> getUserId() {
-			return new Pair<>("userId", extractIfExists(dataParts, 0));
-		}
-
-		String extractIfExists(String[] array, int index) {
-			return index >= array.length ? "" : array[index];
-		}
-	}
-
-	private static class EmptyExtractor extends InfoExtractor {
-		public EmptyExtractor() {
-			super("");
-		}
-
-		@Override public Pair<String, String> getUserName() {
-			return new Pair<>("userName", "");
-		}
-
-		@Override public Pair<String, String> getUserSurname() {
-			return new Pair<>("userSurname", "");
-		}
-
-		@Override public Pair<String, String> getUserCompany() {
-			return new Pair<>("userCompany", "");
-		}
-
-		@Override public Pair<String, String> getUserId() {
-			return new Pair<>("userId", "");
-		}
-
-		public Pair<String, String> getUserJob() {
-			return new Pair<>("userJob", "");
-		}
-	}
 }

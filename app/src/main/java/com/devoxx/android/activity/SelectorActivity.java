@@ -170,7 +170,7 @@ public class SelectorActivity extends BaseActivity implements ConferenceManager.
 	}
 
 	@Click(R.id.selectorGo) void onGoClick(View view) {
-		if (isGoButtonHidden()) {
+		if (isGoButtonHidden() || lastSelectedConference == null) {
 			return;
 		}
 
@@ -255,14 +255,36 @@ public class SelectorActivity extends BaseActivity implements ConferenceManager.
 
 	private void selectNearConference(List<ConferenceApiModel> conferences) {
 		final int size = conferences.size();
-		int index = 0;
+		int index = -1;
+
 		for (int i = 0; i < size; i++) {
 			final ConferenceApiModel conference = conferences.get(i);
 			final DateTime startConf = ConferenceManager.parseConfDate(conference.fromDate);
+			final DateTime endConf = ConferenceManager.parseConfDate(conference.toDate);
 
-			if (startConf.isAfterNow()) {
+			final int startConfDayOfYear = startConf.getDayOfYear();
+			final int nowDayOfYear = new DateTime().getDayOfYear();
+
+			// active conference
+			if (nowDayOfYear >= startConfDayOfYear && nowDayOfYear <= endConf.getDayOfYear()) {
 				index = i;
 				break;
+			}
+		}
+
+		// find fallback conference
+		if (index == -1) {
+			for (int i = 0; i < size; i++) {
+				final ConferenceApiModel conference = conferences.get(i);
+				final DateTime startConf = ConferenceManager.parseConfDate(conference.fromDate);
+
+				final int startConfDayOfYear = startConf.getDayOfYear();
+				final int nowDayOfYear = new DateTime().getDayOfYear();
+
+				if (nowDayOfYear <= startConfDayOfYear) {
+					index = i;
+					break;
+				}
 			}
 		}
 

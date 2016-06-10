@@ -1,6 +1,6 @@
 package com.devoxx.integrations;
 
-import com.devoxx.android.activity.RegisterUserActivity;
+import com.devoxx.data.register.BaseExtractor;
 
 import org.androidannotations.annotations.EBean;
 
@@ -26,7 +26,8 @@ public class EmptyIntegrationController implements IntegrationController {
 	}
 
 	@Override
-	public void userRegistered(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	public void userRegistered(String confId, String finalCode,
+														 BaseExtractor infoExtractor) {
 		// Nothing.
 	}
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             xmlns:app="http://schemas.android.com/apk/res-auto">
+             android:layout_height="match_parent">
 
     <View
         android:layout_width="1dp"
@@ -34,10 +34,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
             android:fontFamily="sans-serif"
-            android:visibility="gone"
             android:gravity="center"
             android:textColor="@color/primary_text_90"
-            android:textSize="22dp"/>
+            android:textSize="22dp"
+            android:visibility="gone"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -54,25 +54,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/registerUserViaQr"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SCAN BADGE"/>
+
+                <Button
+                    android:id="@+id/registerUserViaNfc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:text="READ NFC"
+                    android:visibility="gone"/>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/registerUserSaveCode"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
                 android:text="SAVE"/>
 
-            <Space
-                android:layout_width="4dp"
-                android:layout_height="4dp"/>
 
-            <Button
-                android:id="@+id/registerUserViaQr"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="SCAN BADGE"/>
         </LinearLayout>
+
     </LinearLayout>
 </FrameLayout>

@@ -1,8 +1,8 @@
 package com.devoxx.integrations.huntly;
 
 import com.annimon.stream.Optional;
-import com.devoxx.android.activity.RegisterUserActivity;
 import com.devoxx.data.RealmProvider;
+import com.devoxx.data.register.BaseExtractor;
 import com.devoxx.integrations.huntly.connection.HuntlyConnection;
 import com.devoxx.integrations.huntly.connection.model.HuntlyActivityCompleteResponse;
 import com.devoxx.integrations.huntly.connection.model.HuntlyDeepLinkConf;
@@ -64,8 +64,8 @@ public class HuntlyController {
 		}
 	}
 
-	@Background
-	void updateUserProfileAsync(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	@Background void updateUserProfileAsync(String confId, String finalCode,
+																					BaseExtractor infoExtractor) {
 		if (!isEventIdAvailable()) {
 			return;
 		}
@@ -285,7 +285,9 @@ public class HuntlyController {
 		return result;
 	}
 
-	private List<HuntlyProfileProperty> createProperties(String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	private List<HuntlyProfileProperty> createProperties(
+			String finalCode,
+			BaseExtractor infoExtractor) {
 		final List<HuntlyProfileProperty> result = new ArrayList<>();
 		appendProperty(infoExtractor.getUserId().first, finalCode, result);
 		appendProperty(infoExtractor.getUserName(), result);

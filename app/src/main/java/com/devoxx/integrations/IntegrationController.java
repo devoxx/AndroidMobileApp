@@ -1,6 +1,6 @@
 package com.devoxx.integrations;
 
-import com.devoxx.android.activity.RegisterUserActivity;
+import com.devoxx.data.register.BaseExtractor;
 
 import android.app.Activity;
 import android.view.Menu;
@@ -14,7 +14,7 @@ public interface IntegrationController {
 
 	void talkVoted(String confCode, Activity activity);
 
-	void userRegistered(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor);
+	void userRegistered(String confId, String finalCode, BaseExtractor infoExtractor);
 
 	void setupIntegrationToolbarMenuItem(Menu menu);
 

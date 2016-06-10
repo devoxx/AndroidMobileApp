@@ -23,7 +23,6 @@ import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -105,8 +104,6 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 		items = filterManager.applyTracksFilter(items);
 		scheduleDayLineupAdapter.setData(items);
 		scheduleDayLineupAdapter.notifyDataSetChanged();
-
-		scrollToCurrentRunningSlot();
 	}
 
 	@Override
@@ -141,22 +138,6 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 		items = filterManager.applyTracksFilter(items);
 		scheduleDayLineupAdapter.setData(items);
 		scheduleDayLineupAdapter.notifyDataSetChanged();
-
-		scrollToCurrentRunningSlot();
-	}
-
-	private void scrollToCurrentRunningSlot() {
-		final int runningIndex = scheduleDayLineupAdapter.getRunningFirstPosition();
-		if (runningIndex != ScheduleDayLineupAdapter.INVALID_RUNNING_SLOT_INDEX) {
-			final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-			final int lastVisiblePosition = lm.findLastCompletelyVisibleItemPosition();
-			if (lastVisiblePosition != -1 && lastVisiblePosition < runningIndex) {
-				lm.scrollToPosition(runningIndex + 3); // Correct scroll position.
-			} else {
-				lm.scrollToPosition(runningIndex);
-			}
-		}
 	}
 
 	@Override

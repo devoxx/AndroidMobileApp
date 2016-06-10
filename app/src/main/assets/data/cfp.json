@@ -99,7 +99,7 @@
     "regURL": "https://www.eventbrite.co.uk/e/devoxx-uk-2016-tickets-19399397119",
     "cfpURL": "https://cfp.devoxx.co.uk/",
     "talkURL": "http://cfp.devoxx.co.uk/2016/talk/",
-    "votingURL": "https://api-voting.devoxx.com/",
+    "votingURL": "https://cfp.devoxx.co.uk/",
     "votingEnabled": "true",
     "votingImageName": "beer",
     "cfpEndpoint": "https://cfp.devoxx.co.uk/api",

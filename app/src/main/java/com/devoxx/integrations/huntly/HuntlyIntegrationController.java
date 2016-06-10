@@ -2,8 +2,8 @@ package com.devoxx.integrations.huntly;
 
 import com.annimon.stream.Optional;
 import com.devoxx.R;
-import com.devoxx.android.activity.RegisterUserActivity;
 import com.devoxx.android.fragment.common.BaseMenuFragment;
+import com.devoxx.data.register.BaseExtractor;
 import com.devoxx.integrations.IntegrationController;
 import com.devoxx.integrations.huntly.connection.HuntlyConnection;
 import com.devoxx.integrations.huntly.connection.model.HuntlyUserStats;
@@ -44,7 +44,8 @@ public class HuntlyIntegrationController implements IntegrationController {
 	}
 
 	@Override
-	public void userRegistered(String confId, String finalCode, RegisterUserActivity.InfoExtractor infoExtractor) {
+	public void userRegistered(String confId, String finalCode,
+														 BaseExtractor infoExtractor) {
 		huntlyController.updateUserProfileAsync(confId, finalCode, infoExtractor);
 	}
 
