@@ -1,5 +1,14 @@
 package com.devoxx.android.view.speaker;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.devoxx.R;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.ViewById;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,15 +20,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.devoxx.R;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.fragment_speaker_details_toolbar_include)
 public class SpeakerDetailsHeader extends LinearLayout {
@@ -45,9 +45,9 @@ public class SpeakerDetailsHeader extends LinearLayout {
 		Glide.with(getContext())
 				.load(imageUrl)
 				.asBitmap()
-				.placeholder(R.drawable.th_background)
-				.error(R.drawable.no_photo)
-				.fallback(R.drawable.no_photo)
+				.placeholder(R.drawable.ic_speaker_placeholder)
+				.error(R.drawable.ic_speaker_placeholder)
+				.fallback(R.drawable.ic_speaker_placeholder)
 				.centerCrop()
 				.into(new BitmapImageViewTarget(image) {
 					@Override

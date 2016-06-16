@@ -14,6 +14,8 @@ import org.androidannotations.annotations.RootContext;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,6 +34,13 @@ public class HuntlyIntegrationController implements IntegrationController {
 	@Override public void downloadNeededData(String confCode) {
 		huntlyController.fetchEvents(confCode);
 		huntlyController.fetchOtherData(confCode);
+	}
+
+	@Override public void updateNeededData(String confCode) {
+		final HandlerThread handlerThread = new HandlerThread("updateNeededData");
+		handlerThread.start();
+		final Handler handler = new Handler(handlerThread.getLooper());
+		handler.post(() -> huntlyController.fetchOtherData(confCode));
 	}
 
 	@Override public void handleAppResume(String confId, Activity activity) {

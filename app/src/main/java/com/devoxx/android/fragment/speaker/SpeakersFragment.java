@@ -37,8 +37,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +70,7 @@ public class SpeakersFragment extends BaseMenuFragment {
 	View container;
 
 	private ItemAdapter itemAdapter;
+	private Collator collator;
 
 	@AfterInject void afterInject() {
 		itemAdapter = new ItemAdapter();
@@ -77,6 +78,9 @@ public class SpeakersFragment extends BaseMenuFragment {
 
 	@AfterViews void afterViewsInternal() {
 		super.afterViews();
+
+		collator = Collator.getInstance();
+		collator.setStrength(Collator.PRIMARY);
 
 		listView.setAdapter(itemAdapter);
 
@@ -125,7 +129,7 @@ public class SpeakersFragment extends BaseMenuFragment {
 		final List<SpeakersGroup> list = Stream.of(speakers)
 				.groupBy(speakerFirstLetterGroupping())
 				.map(speakersGroupMapper())
-				.sorted((lhs, rhs) -> lhs.getGroupLetter().compareTo(rhs.getGroupLetter()))
+				.sorted((lhs, rhs) -> collator.compare(lhs.getGroupLetter(), rhs.getGroupLetter()))
 				.collect(Collectors.<SpeakersGroup>toList());
 
 		itemAdapter.setSpeakers(list);
@@ -242,9 +246,9 @@ public class SpeakersFragment extends BaseMenuFragment {
 					.load(speakerItem.getAvatarURL())
 					.asBitmap()
 					.centerCrop()
-					.placeholder(R.drawable.th_background)
-					.error(R.drawable.no_photo)
-					.fallback(R.drawable.no_photo)
+					.placeholder(R.drawable.ic_speaker_placeholder)
+					.error(R.drawable.ic_speaker_placeholder)
+					.fallback(R.drawable.ic_speaker_placeholder)
 					.into(new BitmapImageViewTarget(holder.imageSpeaker) {
 						@Override
 						public void onResourceReady(

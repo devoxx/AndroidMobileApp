@@ -59,9 +59,9 @@ public class ScheduleSpeakerView extends LinearLayout {
 				.asBitmap()
 				.centerCrop()
 				.override(imageSize, imageSize)
-				.placeholder(R.drawable.th_background)
-				.error(R.drawable.no_photo)
-				.fallback(R.drawable.no_photo)
+				.placeholder(R.drawable.ic_speaker_placeholder)
+				.error(R.drawable.ic_speaker_placeholder)
+				.fallback(R.drawable.ic_speaker_placeholder)
 				.into(new BitmapImageViewTarget(imageView) {
 					@Override
 					public void onResourceReady(

@@ -299,16 +299,10 @@ public class TalkFragment extends BaseFragment implements AppBarLayout.OnOffsetC
 				}
 
 				@Override
-				public void onCantVoteOnTalkYet() {
-					if (isLive()) {
-						infoUtil.showToast("Cannot vote on talk yet");
-					}
-				}
-
-				@Override
 				public void onCantVoteMoreThanOnce() {
 					if (isLive()) {
 						infoUtil.showToast("Cannot vote more than once");
+						setupVoteIcon();
 					}
 				}
 			});

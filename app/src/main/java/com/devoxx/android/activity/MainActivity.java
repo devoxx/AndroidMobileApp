@@ -233,6 +233,12 @@ public class MainActivity extends BaseActivity {
 	private void loadCoreData() {
 		conferenceManager.createSpeakersRepository();
 
+		final Optional<RealmConference> confCode = conferenceManager.getActiveConference();
+		if (confCode.isPresent()) {
+			final String externalId = confCode.get().getIntegrationId();
+			integrationProvider.provideIntegrationController().updateNeededData(externalId);
+		}
+
 		onMainMenuClick(menuScheduleView);
 
 		if (TextUtils.isEmpty(fromNotificationSlotId)) {

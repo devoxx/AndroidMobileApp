@@ -24,7 +24,7 @@ public class DevoxxPlConnection {
 		}
 
 		final Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl("http://dxr-dev.herokuapp.com/")
+				.baseUrl("http://reg.devoxx.pl/")
 				.client(builder.build())
 				.addConverterFactory(GsonConverterFactory.create())
 				.build();

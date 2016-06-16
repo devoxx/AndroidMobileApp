@@ -17,6 +17,10 @@ public class EmptyIntegrationController implements IntegrationController {
 		// Nothing.
 	}
 
+	@Override public void updateNeededData(String confCode) {
+		// Nothing.
+	}
+
 	@Override public void handleAppResume(String confCode, Activity activity) {
 		// Nothing.
 	}

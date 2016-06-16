@@ -119,27 +119,51 @@
     "longitude": "19.931590",
     "floors": [
       {
-        "img": "todo provide image",
-        "title": "First floor",
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level0.jpg",
+        "title": "Level 0",
         "tabpos": "1",
         "target": "phone"
       },
       {
-        "img": "todo provide image",
-        "title": "Second floor",
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level1.jpg",
+        "title": "Level 1",
         "tabpos": "2",
         "target": "phone"
       },
       {
-        "img": "todo provide image",
-        "title": "First floor",
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level2.jpg",
+        "title": "Level 2",
+        "tabpos": "3",
+        "target": "phone"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level3.jpg",
+        "title": "Level 3",
+        "tabpos": "4",
+        "target": "phone"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level0.jpg",
+        "title": "Level 0",
         "tabpos": "1",
         "target": "tablet"
       },
       {
-        "img": "todo provide image",
-        "title": "Second floor",
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level1.jpg",
+        "title": "Level 1",
         "tabpos": "2",
+        "target": "tablet"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level2.jpg",
+        "title": "Level 2",
+        "tabpos": "3",
+        "target": "tablet"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/Level3.jpg",
+        "title": "Level 3",
+        "tabpos": "4",
         "target": "tablet"
       }
     ],
@@ -153,13 +177,13 @@
     "regURL": "http://reg.devoxx.pl/",
     "cfpURL": "http://cfp.devoxx.pl/",
     "talkURL": "",
-    "votingURL": "https://api-voting.devoxx.com/",
+    "votingURL": "http://cfp.devoxx.pl/",
     "votingEnabled": "true",
     "votingImageName": "vodka",
     "cfpEndpoint": "http://cfp.devoxx.pl/api",
     "cfpVersion": "1.0",
     "youTubeURL": "https://www.youtube.com/c/devoxx2015",
-    "integration_id": "devoxx_poland"
+    "integration_id": "devoxx_pl"
   },
   {
     "id": "DV15",

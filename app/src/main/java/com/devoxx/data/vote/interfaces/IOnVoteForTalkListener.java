@@ -5,7 +5,5 @@ public interface IOnVoteForTalkListener {
 
 	void onVoteForTalkFailed();
 
-	void onCantVoteOnTalkYet();
-
 	void onCantVoteMoreThanOnce();
 }

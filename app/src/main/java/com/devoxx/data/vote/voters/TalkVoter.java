@@ -50,8 +50,7 @@ import retrofit2.Response;
 @EBean
 public class TalkVoter implements ITalkVoter {
 
-	private static final int NOT_READY_VOTE_HTTP_CODE = 500;
-	private static final int ALREADY_VOTED_HTTP_CODE = 409;
+	private static final int ALREADY_VOTED_HTTP_CODE = 202;
 
 	@Bean
 	VoteConnection voteConnection;
@@ -185,12 +184,10 @@ public class TalkVoter implements ITalkVoter {
 			final Call<VoteApiSimpleModel> call = createRequest(rating, talkId, content, delivery, other, voteApi);
 			final Response<VoteApiSimpleModel> response = call.execute();
 
-			if (response.isSuccessful()) {
+			if (response.isSuccessful() && response.code() != ALREADY_VOTED_HTTP_CODE) {
 				rememberVote(realm, talkId);
 				notifyAboutSuccess(listener);
 				notifyIntegration(activity);
-			} else if (response.code() == NOT_READY_VOTE_HTTP_CODE) {
-				notifyAboutCantVote(listener);
 			} else if (response.code() == ALREADY_VOTED_HTTP_CODE) {
 				rememberVote(realm, talkId);
 				notifyAboutCantVoteMore(listener);
@@ -224,12 +221,6 @@ public class TalkVoter implements ITalkVoter {
 	@UiThread void notifyAboutError(IOnVoteForTalkListener listener) {
 		if (listener != null) {
 			listener.onVoteForTalkFailed();
-		}
-	}
-
-	@UiThread void notifyAboutCantVote(IOnVoteForTalkListener listener) {
-		if (listener != null) {
-			listener.onCantVoteOnTalkYet();
 		}
 	}
 

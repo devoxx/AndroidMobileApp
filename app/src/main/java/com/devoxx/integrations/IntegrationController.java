@@ -10,6 +10,8 @@ public interface IntegrationController {
 
 	void downloadNeededData(String confCode);
 
+	void updateNeededData(String confCode);
+
 	void handleAppResume(String confCode, Activity activity);
 
 	void talkVoted(String confCode, Activity activity);
