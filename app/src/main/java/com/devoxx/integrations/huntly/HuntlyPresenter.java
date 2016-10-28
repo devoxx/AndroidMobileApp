@@ -4,6 +4,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devoxx.R;
 import com.devoxx.integrations.huntly.connection.model.HuntlyDeepLinkConf;
 import com.devoxx.integrations.huntly.connection.model.HuntlyQuestActivity;
+import com.devoxx.utils.InfoUtil;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
@@ -26,10 +27,12 @@ import java.util.Locale;
 public class HuntlyPresenter {
 
 	public static final String INTEGRATION_DIALOG_DISMISSED = "HuntlyPresenter.INTEGRATION_DIALOG_DISMISSED";
+	private static final String BROWSER_FALLBACK_URI_PREFIX = "https://play.google.com/store/apps/details?id=";
 
 	@RootContext Context context;
 	@Pref HuntlySettings_ huntlySettings;
 	@Bean HuntlyController huntlyController;
+	@Bean InfoUtil infoUtil;
 
 	void showFirstRunDialogIfNeeded(String confId, Activity activity) {
 		if (huntlySettings.isFirstRun().getOr(true) && huntlyController.isAnyFirstRunQuest()) {
@@ -54,11 +57,27 @@ public class HuntlyPresenter {
 		final List<ResolveInfo> list = packageManager.queryIntentActivities(startIntent, 0);
 
 		if (list.isEmpty()) {
-			final Uri marketUri = Uri.parse(deepLinks.getPlayStoreUri());
-			mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
+			openPlayStore(deepLinks, mainActivity);
 		} else {
 			startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			mainActivity.startActivity(startIntent);
+		}
+	}
+
+	private void openPlayStore(HuntlyDeepLinkConf deepLinks, Activity mainActivity) {
+		final Uri marketUri = Uri.parse(deepLinks.getPlayStoreUri());
+
+		try {
+			mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
+		} catch (Exception e) {
+
+			final Uri uri = Uri.parse(deepLinks.getPlayStoreUri());
+			final List<String> parts = uri.getQueryParameters("id");
+
+			if (parts != null && !parts.isEmpty()) {
+				mainActivity.startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse(BROWSER_FALLBACK_URI_PREFIX + parts.get(0))));
+			}
 		}
 	}
 

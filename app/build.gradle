@@ -24,11 +24,17 @@ def PACKAGE_NAME = "com.devoxx"
 def VERSION_CODE = keystoreProperties['code'].toInteger()
 def VERSION_NAME = keystoreProperties['name']
 
+def AWS_APP_ARN = keystoreProperties['awsApplicationArn']
+def AWS_KEY = keystoreProperties['awsAccessKey']
+def AWS_SECRET = keystoreProperties['awsSecret']
+def AWS_ENDPOINT = keystoreProperties['awsEndpoint']
+def AWS_TOPIC_ARN = keystoreProperties['awsTopicArn']
+
 def mapKey = keystoreProperties['mapKey']
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId PACKAGE_NAME
@@ -40,6 +46,14 @@ android {
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
+
+        multiDexEnabled true
+
+        buildConfigField 'String', 'AWS_APP_ARN', "\"${AWS_APP_ARN}\""
+        buildConfigField 'String', 'AWS_KEY', "\"${AWS_KEY}\""
+        buildConfigField 'String', 'AWS_SECRET', "\"${AWS_SECRET}\""
+        buildConfigField 'String', 'AWS_ENDPOINT', "\"${AWS_ENDPOINT}\""
+        buildConfigField 'String', 'AWS_TOPIC_ARN', "\"${AWS_TOPIC_ARN}\""
     }
 
     signingConfigs {
@@ -110,6 +124,7 @@ apt {
 }
 
 def SUPPORT_LIBRARY_VERSION = "23.2.1"
+def GPS_LIBRARY_VERSION = "8.4.0"
 
 dependencies {
     repositories {
@@ -123,17 +138,23 @@ dependencies {
     withIntegrationWearApp project(path: ':wear', configuration: 'withIntegrationRelease')
     noIntegrationWearApp project(path: ':wear', configuration: 'noIntegrationRelease')
 
+    compile 'com.android.support:multidex:1.0.0'
+
     compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
 
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.google.android.gms:play-services-vision:8.4.0'
-    compile 'com.google.android.gms:play-services-wearable:8.4.0'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile "com.google.android.gms:play-services-maps:${GPS_LIBRARY_VERSION}"
+    compile "com.google.android.gms:play-services-vision:${GPS_LIBRARY_VERSION}"
+    compile "com.google.android.gms:play-services-wearable:${GPS_LIBRARY_VERSION}"
+    compile "com.google.android.gms:play-services-ads:${GPS_LIBRARY_VERSION}"
+    compile "com.google.android.gms:play-services-gcm:${GPS_LIBRARY_VERSION}"
 
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.makeramen:roundedimageview:2.2.0'
+
+    compile "com.amazonaws:aws-android-sdk-core:2.3.1"
+    compile "com.amazonaws:aws-android-sdk-sns:2.3.1"
 
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile('com.squareup.retrofit2:retrofit:2.0.0') {
@@ -163,13 +184,10 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.google.android:flexbox:0.1.3'
 
-    // Event Bus: BusWear
     compile 'pl.tajchert:buswear:0.9.5'
 
     compile project(path: ':scanner')
-
     compile project(path: ':common')
-
     compile project(path: ':huntly_integration')
 
 }

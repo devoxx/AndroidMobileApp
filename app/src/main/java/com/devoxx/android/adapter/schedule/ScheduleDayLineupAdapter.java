@@ -10,6 +10,7 @@ import com.devoxx.android.view.list.schedule.BreakItemView_;
 import com.devoxx.android.view.list.schedule.TalkItemView_;
 import com.devoxx.android.view.list.schedule.TalksMoreItemView_;
 import com.devoxx.android.view.list.schedule.TimespanItemView_;
+import com.devoxx.android.view.listholder.schedule.BadItemHolder;
 import com.devoxx.android.view.listholder.schedule.BaseItemHolder;
 import com.devoxx.android.view.listholder.schedule.BreakItemHolder;
 import com.devoxx.android.view.listholder.schedule.TalkItemHolder;
@@ -22,7 +23,9 @@ import org.androidannotations.annotations.EBean;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.lang.annotation.Retention;
@@ -37,13 +40,15 @@ public class ScheduleDayLineupAdapter extends RecyclerView.Adapter<BaseItemHolde
 	public static final int BREAK_VIEW = 2;
 	public static final int TALK_VIEW = 3;
 	public static final int TALK_MORE_VIEW = 4;
+	static final int BAD_VIEW_TYPE = 5;
 	public static final int INVALID_RUNNING_SLOT_INDEX = -1;
 
 	@IntDef({
 			TIMESPAN_VIEW,
 			BREAK_VIEW,
 			TALK_VIEW,
-			TALK_MORE_VIEW
+			TALK_MORE_VIEW,
+			BAD_VIEW_TYPE
 	})
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface ViewType {
@@ -65,7 +70,8 @@ public class ScheduleDayLineupAdapter extends RecyclerView.Adapter<BaseItemHolde
 	}
 
 	public Optional<SlotApiModel> getClickedSlot(int position) {
-		return getItem(position).getItem(position);
+		final ScheduleItem scheduleItem = getItem(position);
+		return (scheduleItem != null) ? scheduleItem.getItem(position) : Optional.empty();
 	}
 
 	@Override
@@ -86,6 +92,9 @@ public class ScheduleDayLineupAdapter extends RecyclerView.Adapter<BaseItemHolde
 				break;
 			case TALK_MORE_VIEW:
 				result = new TalksMoreItemHolder(TalksMoreItemView_.build(context));
+				break;
+			case BAD_VIEW_TYPE:
+				result = new BadItemHolder(new View(context));
 				break;
 			default:
 				throw new IllegalStateException("No holder for view type: " + viewType);
@@ -167,7 +176,8 @@ public class ScheduleDayLineupAdapter extends RecyclerView.Adapter<BaseItemHolde
 	@Override
 	@ScheduleDayLineupAdapter.ViewType
 	public int getItemViewType(int position) {
-		return getItem(position).getItemType(position);
+		final ScheduleItem scheduleItem = getItem(position);
+		return (scheduleItem != null) ? scheduleItem.getItemType(position) : BAD_VIEW_TYPE;
 	}
 
 	@Override
@@ -179,6 +189,7 @@ public class ScheduleDayLineupAdapter extends RecyclerView.Adapter<BaseItemHolde
 		return result;
 	}
 
+	@Nullable
 	private ScheduleItem getItem(int position) {
 		for (ScheduleItem scheduleItem : data) {
 			final int startIndex = scheduleItem.getStartIndex();
@@ -187,6 +198,7 @@ public class ScheduleDayLineupAdapter extends RecyclerView.Adapter<BaseItemHolde
 				return scheduleItem;
 			}
 		}
-		throw new IllegalStateException("No item for position: " + position);
+
+		return null;
 	}
 }

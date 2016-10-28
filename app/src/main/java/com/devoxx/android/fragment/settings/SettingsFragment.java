@@ -60,7 +60,7 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	@PreferenceClick(R.string.settings_refresh_schedule_data_key) void onRefreshScheduleDataClick() {
-		conferenceManager.forceUpdateScheduleData();
+		conferenceManager.forceUpdateFromSettings(getActivity().getApplicationContext());
 	}
 
 	private void setupUserCodePreference() {

@@ -15,5 +15,7 @@ public interface Settings {
 
 	@DefaultBoolean(true) boolean isFirstStart();
 
+	@DefaultBoolean(false) boolean requestedForceRefresh();
+
 	@DefaultString("") String lastSelectedConference();
 }

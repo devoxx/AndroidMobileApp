@@ -16,11 +16,19 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -30,21 +38,60 @@ import retrofit2.Response;
 @EActivity(R.layout.activity_nfc_connection)
 public class NfcConnectionActivity extends AppCompatActivity {
 
+	private static final long RECHECK_NFC_SETTINGS_INTERVAL_MS = 500;
 	public static final String KEY_RESULT_MODEL = "key_result_model";
 
 	@ViewById protected ProgressBar loadingBar;
+	@ViewById protected TextView loadingLabel;
+	@ViewById protected Button enableNfcBtn;
 
 	@Bean DevoxxPlConnection devoxxPlConnection;
 	@Bean InfoUtil infoUtil;
 
 	private NfcTagAdapter adapter;
+	private Handler handler;
+	private Runnable checkNfcSettings = new Runnable() {
+		@Override public void run() {
+			if (isNfcEnabled()) {
+				if (handler != null) {
+					handler.removeCallbacks(this);
+				}
+
+				setupViewWithNfc();
+			} else {
+				if (handler != null) {
+					handler.postDelayed(this, RECHECK_NFC_SETTINGS_INTERVAL_MS);
+				}
+
+				setupViewWithNoNfc();
+			}
+		}
+	};
 
 	@AfterViews protected void init() {
 		devoxxPlConnection.setup();
-
-		loadingBar.setVisibility(View.VISIBLE);
-
 		adapter = new NfcTagAdapter(this);
+		handler = new Handler(Looper.getMainLooper());
+	}
+
+	private void setupViewWithNoNfc() {
+		loadingLabel.setText(R.string.disabled_nfc);
+		enableNfcBtn.setVisibility(View.VISIBLE);
+	}
+
+	private void setupViewWithNfc() {
+		loadingLabel.setText(R.string.nfc_connection_waiting);
+		enableNfcBtn.setVisibility(View.GONE);
+	}
+
+	@Click(R.id.enableNfcBtn) void onEnableNfcClick() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			Intent intent = new Intent(Settings.ACTION_NFC_SETTINGS);
+			startActivity(intent);
+		} else {
+			Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+			startActivity(intent);
+		}
 	}
 
 	@Click(R.id.backBtn) public void goBackToHomeActivity() {
@@ -52,9 +99,9 @@ public class NfcConnectionActivity extends AppCompatActivity {
 	}
 
 	@Override protected void onNewIntent(Intent intent) {
-		loadingBar.setVisibility(View.INVISIBLE);
-
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+			showLoading();
+
 			final byte[] rawId = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
 			final String nfcTagId = adapter.byteArrayToHexString(rawId);
 			handleScannedNfcId(nfcTagId);
@@ -79,6 +126,16 @@ public class NfcConnectionActivity extends AppCompatActivity {
 			}
 			Crashlytics.logException(e);
 		}
+
+		hideLoading();
+	}
+
+	@UiThread void showLoading() {
+		loadingBar.setVisibility(View.VISIBLE);
+	}
+
+	@UiThread void hideLoading() {
+		loadingBar.setVisibility(View.INVISIBLE);
 	}
 
 	@UiThread void goBackToRegisterActivity(DevoxxPlUserModel body) {
@@ -90,22 +147,33 @@ public class NfcConnectionActivity extends AppCompatActivity {
 
 	@UiThread void handleError(String msg) {
 		infoUtil.showToast(msg);
-		loadingBar.setVisibility(View.VISIBLE);
-	}
-
-	private Intent packModelToIntent(DevoxxPlUserModel body) {
-		final Intent intent = new Intent();
-		intent.putExtra(KEY_RESULT_MODEL, body);
-		return intent;
 	}
 
 	@Override public void onPause() {
 		super.onPause();
 		adapter.disableForegroundDispatch();
+
+		if (handler != null) {
+			handler.removeCallbacks(checkNfcSettings);
+		}
 	}
 
 	@Override public void onResume() {
 		super.onResume();
 		adapter.enableForegroundDispatch();
+
+		if (handler != null) {
+			handler.post(checkNfcSettings);
+		}
+	}
+
+	private Intent packModelToIntent(DevoxxPlUserModel body) {
+		return new Intent().putExtra(KEY_RESULT_MODEL, body);
+	}
+
+	private boolean isNfcEnabled() {
+		final NfcManager manager = (NfcManager) getSystemService(Context.NFC_SERVICE);
+		final NfcAdapter adapter = manager.getDefaultAdapter();
+		return adapter != null && adapter.isEnabled();
 	}
 }

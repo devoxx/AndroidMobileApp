@@ -108,7 +108,7 @@
     "integration_id": "devoxx_uk"
   },
   {
-    "id": "DevoxxPL2015",
+    "id": "DevoxxPL2016",
     "confType": "Devoxx",
     "confDescription": "Devoxx Poland 2016",
     "confIcon": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/splash_btn_krakow.png",
@@ -167,16 +167,16 @@
         "target": "tablet"
       }
     ],
-    "capacity": "2000",
+    "capacity": "2750",
     "sessions": "200",
     "hashtag": "#DevoxxPL",
     "splashImgURL": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/poland/DevoxxPolandHomePage.jpg",
     "fromDate": "2016-06-22T08:00:00.000Z",
-    "toDate": "2016-06-25T22:00:00.000Z",
+    "toDate": "2016-06-24T22:00:00.000Z",
     "wwwURL": "http://www.devoxx.pl",
     "regURL": "http://reg.devoxx.pl/",
     "cfpURL": "http://cfp.devoxx.pl/",
-    "talkURL": "",
+    "talkURL": "http://cfp.devoxx.pl/2016/talk/",
     "votingURL": "http://cfp.devoxx.pl/",
     "votingEnabled": "true",
     "votingImageName": "vodka",
@@ -186,9 +186,9 @@
     "integration_id": "devoxx_pl"
   },
   {
-    "id": "DV15",
+    "id": "DV16",
     "confType": "Devoxx",
-    "confDescription": "Devoxx Belgium 2015",
+    "confDescription": "Devoxx Belgium 2016",
     "confIcon": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/belgium/splash_btn_brussels.png",
     "venue": "Kinepolis",
     "address": "Groenendaallaan 394, 2030 Antwerpen",
@@ -222,16 +222,16 @@
       }
     ],
     "capacity": "3500",
-    "sessions": "250",
+    "sessions": "200",
     "hashtag": "#Devoxx",
     "splashImgURL": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/belgium/DevoxxBelgiumHomePage.jpg",
     "fromDate": "2016-11-7T08:00:00.000Z",
     "toDate": "2016-11-11T22:00:00.000Z",
-    "wwwURL": "https://www.devoxx.be",
+    "wwwURL": "https://devoxx.be",
     "regURL": "http://reg.devoxx.be/",
     "cfpURL": "https://cfp.devoxx.be/",
-    "talkURL": "https://cfp.devoxx.be/2015/talk/",
-    "votingURL": "https://api-voting.devoxx.com/",
+    "talkURL": "https://cfp.devoxx.be/2016/talk/",
+    "votingURL": "https://cfp.devoxx.be/",
     "votingEnabled": "true",
     "votingImageName": "beer",
     "cfpEndpoint": "https://cfp.devoxx.be/api",
@@ -240,9 +240,9 @@
     "integration_id": "devoxx_belgium"
   },
   {
-    "id": "DevoxxMA2015",
+    "id": "DevoxxMA2016",
     "confType": "Devoxx",
-    "confDescription": "Devoxx Morocco 2015",
+    "confDescription": "Devoxx Morocco 2016",
     "confIcon": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/morocco/splash_btn_ma.png",
     "venue": "Studio des Arts Vivants",
     "address": "Route d'Azemmour, Casablanca",
@@ -281,16 +281,70 @@
     "splashImgURL": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/morocco/DevoxxMoroccoHomePage.jpg",
     "fromDate": "2016-11-1T08:00:00.000Z",
     "toDate": "2016-11-3T22:00:00.000Z",
-    "wwwURL": "http://www.devoxx.ma",
-    "regURL": "http://reg.devoxx.ma/",
-    "cfpURL": "http://cfp.devoxx.ma/",
-    "talkURL": "http://cfp.devoxx.ma/2015/talk/",
-    "votingURL": "https://api-voting.devoxx.com/",
-    "votingEnabled": "true",
+    "wwwURL": "https://www.devoxx.ma",
+    "regURL": "https://www.devoxx.ma/register/",
+    "cfpURL": "https://cfp.devoxx.ma/",
+    "talkURL": "https://cfp.devoxx.ma/2016/talk/",
+    "votingURL": "https://cfp.devoxx.ma/",
+    "votingEnabled": "false",
     "votingImageName": "thee",
-    "cfpEndpoint": "http://cfp.devoxx.ma/api",
+    "cfpEndpoint": "https://cfp.devoxx.ma/api",
     "cfpVersion": "1.0",
     "youTubeURL": "https://www.youtube.com/user/JMaghreb",
     "integration_id": "devoxx_morocco"
+  },
+  {
+    "id": "DevoxxUS2017",
+    "confType": "Devoxx",
+    "confDescription": "Devoxx US 2017",
+    "confIcon": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/us/splash_btn_usa.png",
+    "venue": "San Jose Convention Center",
+    "address": "San Jose, California",
+    "country": "United States",
+    "latitude": "37.3303463",
+    "longitude": "-121.8912371",
+    "floors": [
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/morocco/firstfloor_phone.jpg",
+        "title": "First floor",
+        "tabpos": "1",
+        "target": "phone"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/morocco/secondfloor_phone.jpg",
+        "title": "Second floor",
+        "tabpos": "2",
+        "target": "phone"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/morocco/firstfloor.jpg",
+        "title": "First floor",
+        "tabpos": "1",
+        "target": "tablet"
+      },
+      {
+        "img": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/morocco/secondfloor.jpg",
+        "title": "Second floor",
+        "tabpos": "2",
+        "target": "tablet"
+      }
+    ],
+    "capacity": "1500",
+    "sessions": "200",
+    "hashtag": "#DevoxxUS",
+    "splashImgURL": "https://s3-eu-west-1.amazonaws.com/cfpdevoxx/us/DevoxxUSHomePage.jpg",
+    "fromDate": "2017-03-21T08:00:00.000Z",
+    "toDate": "2017-03-23T22:00:00.000Z",
+    "wwwURL": "https://devoxx.us",
+    "regURL": "https://www.regonline.com/register/checkin.aspx?MethodId=0&EventId=1845425",
+    "cfpURL": "http://cfp.devoxx.us/",
+    "talkURL": "http://cfp.devoxx.us/2017/talk/",
+    "votingURL": "http://cfp.devoxx.us/",
+    "votingEnabled": "true",
+    "votingImageName": "thee",
+    "cfpEndpoint": "http://cfp.devoxx.us/api",
+    "cfpVersion": "1.0",
+    "youTubeURL": "https://www.youtube.com/c/devoxx2015",
+    "integration_id": " devoxx_us"
   }
 ]

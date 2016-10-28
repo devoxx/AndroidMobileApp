@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.NFC"/>
 
+    <permission android:name="com.devoxx.permission.C2D_MESSAGE"
+                android:protectionLevel="signature"/>
+    <uses-permission android:name="com.devoxx.permission.C2D_MESSAGE"/>
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false"/>
@@ -118,6 +122,39 @@
             </intent-filter>
         </service>
 
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.example.gcm"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".utils.NetworkChangeBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.devoxx.push.PushGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.devoxx.push.PushInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -127,6 +164,10 @@
             android:value="${mapKey}"
             tools:node="replace"
             tools:replace="android:value"/>
+
+        <meta-data android:name="io.fabric.ApiKey"
+                   android:value="83064b423b9aeb9774cd2592a9fbb97c345edf6a"/>
+
         <meta-data
             android:name="com.google.android.wearable.beta.app"
             android:resource="@xml/wearable_app_desc"/>

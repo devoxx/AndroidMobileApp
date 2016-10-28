@@ -50,7 +50,7 @@ public class NotificationsManager {
 	private static final long DEBUG_BEFORE_TALK_NOTIFICATION_SPAN_MS = TimeUnit.MINUTES.toMillis(1);
 	private static final long DEBUG_POST_TALK_NOTIFICATION_DELAY_MS = TimeUnit.SECONDS.toMillis(10);
 
-	private static final long PROD_BEFORE_TALK_NOTIFICATION_SPAN_MS = TimeUnit.HOURS.toMillis(1);
+	private static final long PROD_BEFORE_TALK_NOTIFICATION_SPAN_MS = TimeUnit.MINUTES.toMillis(20);
 	private static final long PROD_POST_TALK_NOTIFICATION_DELAY_MS = TimeUnit.MINUTES.toMillis(15);
 
 	@RootContext

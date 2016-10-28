@@ -14,11 +14,13 @@ import com.devoxx.data.manager.NotificationsManager;
 import com.devoxx.data.manager.SlotsDataManager;
 import com.devoxx.data.manager.SpeakersDataManager;
 import com.devoxx.data.model.RealmConference;
+import com.devoxx.data.schedule.filter.ScheduleFilterManager;
 import com.devoxx.data.schedule.search.SearchManager;
 import com.devoxx.integrations.IntegrationProvider;
 import com.devoxx.integrations.huntly.HuntlyController;
 import com.devoxx.integrations.huntly.HuntlyPresenter;
 import com.devoxx.navigation.Navigator;
+import com.devoxx.push.PushController;
 import com.devoxx.utils.FontUtils;
 import com.devoxx.utils.InfoUtil;
 
@@ -75,6 +77,12 @@ public class MainActivity extends BaseActivity {
 
 	@Bean
 	IntegrationProvider integrationProvider;
+
+	@Bean
+	ScheduleFilterManager scheduleFilterManager;
+
+	@Bean
+	PushController pushController;
 
 	@Pref
 	Settings_ settings;
@@ -170,7 +178,9 @@ public class MainActivity extends BaseActivity {
 				.handleAppResume(conferenceManager.getActiveConference()
 						.get().getIntegrationId(), this);
 
-		conferenceManager.updateSlotsIfNeededAsync();
+		conferenceManager.updateSlotsIfNeededAsync(getApplicationContext());
+		scheduleFilterManager.createCustomFiltersDefinitionIfNeeded();
+		pushController.uploadToken();
 	}
 
 	@Receiver(actions = {HuntlyPresenter.INTEGRATION_DIALOG_DISMISSED, HuntlyController.USER_DATA_UPDATED},
@@ -232,12 +242,6 @@ public class MainActivity extends BaseActivity {
 
 	private void loadCoreData() {
 		conferenceManager.createSpeakersRepository();
-
-		final Optional<RealmConference> confCode = conferenceManager.getActiveConference();
-		if (confCode.isPresent()) {
-			final String externalId = confCode.get().getIntegrationId();
-			integrationProvider.provideIntegrationController().updateNeededData(externalId);
-		}
 
 		onMainMenuClick(menuScheduleView);
 

@@ -30,7 +30,7 @@ public class RealmProvider {
 		final RealmConfiguration configuration =
 				new RealmConfiguration.Builder(context)
 						.name(DATABASE_NAME)
-						.schemaVersion(2)
+						.schemaVersion(3)
 						.migration(new SchemaMigration())
 						.build();
 		Realm.setDefaultConfiguration(configuration);
@@ -52,6 +52,7 @@ public class RealmProvider {
 			Logger.l("Migration needed, old: " + oldVersion + ", new: " + newVersion);
 
 			final RealmSchema schema = realm.getSchema();
+
 			if (oldVersion == 1) {
 				if (!schema.get("RealmNotification").hasField("talkEndTime")) {
 					schema.get("RealmNotification")
@@ -69,6 +70,20 @@ public class RealmProvider {
 				}
 
 				oldVersion++;
+			}
+
+			if (oldVersion == 2) {
+				migrateFrom2to3(schema);
+				oldVersion++;
+			}
+		}
+
+		private void migrateFrom2to3(RealmSchema schema) {
+			if (!schema.contains("RealmScheduleCustomFilter")) {
+				schema.create("RealmScheduleCustomFilter")
+						.addField("key", String.class, FieldAttribute.PRIMARY_KEY)
+						.addField("label", String.class)
+						.addField("isActive", Boolean.class, FieldAttribute.REQUIRED);
 			}
 		}
 	}

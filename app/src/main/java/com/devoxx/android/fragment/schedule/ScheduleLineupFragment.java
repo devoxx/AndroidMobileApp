@@ -13,7 +13,6 @@ import com.devoxx.data.schedule.filter.ScheduleFilterManager;
 import com.devoxx.data.schedule.search.SearchManager;
 import com.devoxx.navigation.Navigator;
 import com.devoxx.navigation.NeededUpdateListener;
-import com.devoxx.utils.InfoUtil;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -34,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class ScheduleLineupFragment extends BaseListFragment implements NeededUpdateListener {
 
 	public static final String REFRESH_ACTION = "com.devoxx.android.intent.REFRESH_ACTION";
+	public static final String REFETCH_DATA_ACTION = "com.devoxx.android.intent.REFETCH_DATA_ACTION";
 
 	private static final long UNKNOWN_LINEUP_TIME = -1;
 	private static final long CHECK_RUNNING_SESSIONS_INTERVAL_MS = TimeUnit.SECONDS.toMillis(10);
@@ -46,9 +46,6 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 
 	@Bean
 	ScheduleDayLineupAdapter scheduleDayLineupAdapter;
-
-	@Bean
-	InfoUtil infoUtil;
 
 	@Bean
 	ScheduleLineupDataCreator scheduleLineupDataCreator;
@@ -101,7 +98,7 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 			ScheduleFilterManager.FILTERS_CHANGED_ACTION}) void onRefreshData() {
 		final String lastQuery = searchManager.getLastQuery();
 		List<ScheduleItem> items = searchManager.handleSearchQuery(lineupDayMs, lastQuery);
-		items = filterManager.applyTracksFilter(items);
+		items = filterManager.applyListFilter(items);
 		scheduleDayLineupAdapter.setData(items);
 		scheduleDayLineupAdapter.notifyDataSetChanged();
 	}
@@ -123,8 +120,16 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 		onRefreshData();
 	}
 
+	@Receiver(actions = {REFETCH_DATA_ACTION}) void onReFetchDataIntent() {
+		initAdapterWithLastQuery();
+	}
+
 	public static Intent getRefreshIntent() {
 		return new Intent(REFRESH_ACTION);
+	}
+
+	public static Intent getReFetchIntent() {
+		return new Intent(REFETCH_DATA_ACTION);
 	}
 
 	private void initAdapterWithLastQuery() {
@@ -135,7 +140,7 @@ public class ScheduleLineupFragment extends BaseListFragment implements NeededUp
 		} else {
 			items = scheduleLineupDataCreator.prepareInitialData(lineupDayMs);
 		}
-		items = filterManager.applyTracksFilter(items);
+		items = filterManager.applyListFilter(items);
 		scheduleDayLineupAdapter.setData(items);
 		scheduleDayLineupAdapter.notifyDataSetChanged();
 	}

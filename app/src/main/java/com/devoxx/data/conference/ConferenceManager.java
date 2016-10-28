@@ -9,6 +9,7 @@ import com.devoxx.data.Settings_;
 import com.devoxx.data.cache.BaseCache;
 import com.devoxx.data.conference.model.ConferenceDay;
 import com.devoxx.data.downloader.ConferenceDownloader;
+import com.devoxx.data.downloader.SlotsDownloader;
 import com.devoxx.data.downloader.TracksDownloader;
 import com.devoxx.data.manager.SlotsDataManager;
 import com.devoxx.data.manager.SpeakersDataManager;
@@ -33,6 +34,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -227,6 +229,7 @@ public class ConferenceManager {
 		confDataListener.clear();
 	}
 
+	@Nullable
 	public ConferenceApiModel lastSelectedConference() {
 		final String rawData = settings.lastSelectedConference().getOr("");
 		return !TextUtils.isEmpty(rawData) ? new Gson().fromJson(rawData, ConferenceApiModel.class) : null;
@@ -236,19 +239,17 @@ public class ConferenceManager {
 		conferenceDownloader.initWitStaticData();
 	}
 
-	public void updateSlotsIfNeededAsync() {
+	public void updateSlotsIfNeededAsync(Context context) {
 		final Optional<RealmConference> conference = getActiveConference();
 		if (conference.isPresent()) {
-			final String confCode = conference.get().getId();
-			slotsDataManager.updateSlotsAsync(confCode);
+			slotsDataManager.updateSlotsAsync(context, new SlotsDownloader.DownloadRequest(conference.get()));
 		}
 	}
 
-	public void forceUpdateScheduleData() {
+	public void forceUpdateFromSettings(Context context) {
 		final Optional<RealmConference> conference = getActiveConference();
 		if (conference.isPresent()) {
-			final String confCode = conference.get().getId();
-			slotsDataManager.forceUpdateSlotsAsync(confCode);
+			slotsDataManager.forceUpdateSlotsAsync(context, new SlotsDownloader.DownloadRequest(conference.get()));
 		}
 	}
 
@@ -262,7 +263,8 @@ public class ConferenceManager {
 			notifyConferenceListenerStart(confDataListener);
 
 			tracksDownloader.downloadTracksDescriptions(confCode);
-			final boolean isAnyTalks = slotsDataManager.fetchTalksSync(confCode);
+			final boolean isAnyTalks = slotsDataManager.fetchTalksSync(
+					new SlotsDownloader.DownloadRequest(conferenceApiModel));
 			speakersDataManager.fetchSpeakersSync(confCode);
 			createSpeakersRepository();
 
@@ -278,6 +280,8 @@ public class ConferenceManager {
 
 			notifyConferenceListenerSuccess(confDataListener, isAnyTalks);
 		} catch (IOException e) {
+			Crashlytics.logException(e);
+
 			clearCurrentConferenceData();
 			notifyConferenceListenerError(confDataListener);
 		}

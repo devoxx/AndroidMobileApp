@@ -12,7 +12,7 @@ public abstract class ScheduleItem {
 	private final Tuple<Long, Long> slotTimespan;
 	private int startIndex, stopIndex;
 
-	public ScheduleItem(long startTime, long endTime, int aStartIndex, int aStopIndex) {
+	ScheduleItem(long startTime, long endTime, int aStartIndex, int aStopIndex) {
 		startIndex = aStartIndex;
 		this.stopIndex = aStopIndex;
 		slotTimespan = new Tuple<>(startTime, endTime);

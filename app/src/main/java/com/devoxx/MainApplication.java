@@ -10,13 +10,13 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import io.fabric.sdk.android.Fabric;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 @EApplication
-public class MainApplication extends Application {
+public class MainApplication extends MultiDexApplication {
 
 	@Bean IntegrationProvider integrationProvider;
 	@Bean ConferenceManager conferenceManager;

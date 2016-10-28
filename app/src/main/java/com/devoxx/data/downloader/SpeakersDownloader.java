@@ -45,7 +45,13 @@ public class SpeakersDownloader {
 			final DevoxxApi devoxxApi = connection.getDevoxxApi();
 
 			final Call<ResponseBody> callSpeaker = devoxxApi.speaker(confCode, uuid);
-			final String rawModel = callSpeaker.execute().body().string();
+			final ResponseBody responseBody = callSpeaker.execute().body();
+
+			if (responseBody == null) {
+				throw new IOException("No response body!");
+			}
+
+			final String rawModel = responseBody.string();
 			speakerCache.upsert(rawModel, uuid);
 
 			final Realm realm = realmProvider.getRealm();
@@ -69,6 +75,11 @@ public class SpeakersDownloader {
 			final DevoxxApi devoxxApi = connection.getDevoxxApi();
 			final Call<List<SpeakerShortApiModel>> call = devoxxApi.speakers(confCode);
 			speakers = call.execute().body();
+
+			if (speakers == null) {
+				throw new IOException("No response body!");
+			}
+
 			speakersCache.upsert(speakers);
 		}
 

@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    android:orientation="vertical"
-    tools:ignore="DuplicateIds">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:animateLayoutChanges="true"
+              android:orientation="vertical"
+              tools:ignore="DuplicateIds">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/custom"
+            android:textColor="@color/primary_text_90"/>
+
+        <FrameLayout
+            android:id="@+id/dialogFiltersCustomMore"
+            android:layout_width="@dimen/item_talks_more_icon_container_size"
+            android:layout_height="@dimen/item_talks_more_icon_container_size"
+            android:background="?selectableItemBackground"
+            android:gravity="center"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/dialogFiltersMoreIcon"
+                style="@style/ScheduleImageButtonStyle"
+                android:layout_width="@dimen/item_talks_more_icon_size"
+                android:layout_height="@dimen/item_talks_more_icon_size"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:scaleY="-1"
+                android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+                android:tint="@color/dark_gray"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialogFitlersCustoms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/days"
-            android:textColor="@color/primary_text_90" />
+            android:textColor="@color/primary_text_90"/>
 
         <FrameLayout
             android:id="@+id/dialogFiltersDaysMore"
@@ -35,7 +74,7 @@
                 android:contentDescription="@null"
                 android:scaleY="-1"
                 android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-                android:tint="@color/dark_gray" />
+                android:tint="@color/dark_gray"/>
         </FrameLayout>
     </LinearLayout>
 
@@ -43,14 +82,14 @@
         android:id="@+id/dialogFitlersDays"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/primary_text_30" />
+        android:background="@color/primary_text_30"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/tracks"
-            android:textColor="@color/primary_text_90" />
+            android:textColor="@color/primary_text_90"/>
 
         <FrameLayout
             android:id="@+id/dialogFiltersTracksMore"
@@ -81,7 +120,7 @@
                 android:contentDescription="@null"
                 android:scaleY="-1"
                 android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-                android:tint="@color/dark_gray" />
+                android:tint="@color/dark_gray"/>
         </FrameLayout>
     </LinearLayout>
 
@@ -90,5 +129,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:orientation="vertical" />
+        android:orientation="vertical"/>
 </LinearLayout>

@@ -46,6 +46,8 @@ public class HuntlyIntegrationController implements IntegrationController {
 	@Override public void handleAppResume(String confId, Activity activity) {
 		huntlyPresenter.showFirstRunDialogIfNeeded(confId, activity);
 		huntlyPresenter.updateUserStatsAsync(null);
+
+		updateNeededData(confId);
 	}
 
 	@Override public void talkVoted(String confId, Activity activity) {
@@ -54,7 +56,7 @@ public class HuntlyIntegrationController implements IntegrationController {
 
 	@Override
 	public void userRegistered(String confId, String finalCode,
-														 BaseExtractor infoExtractor) {
+	                           BaseExtractor infoExtractor) {
 		huntlyController.updateUserProfileAsync(confId, finalCode, infoExtractor);
 	}
 
@@ -66,8 +68,8 @@ public class HuntlyIntegrationController implements IntegrationController {
 				final HuntlyUserStats stats = statsOpt.get();
 				menuItem.setVisible(true);
 				menuItem.setIcon(BaseMenuFragment.buildCounterDrawable(context, stats.getPoints(),
-						R.drawable.ic_menu_devoxx_hunty_integration_icon,
-						R.layout.toolbar_menu_item_with_badge_centered_view));
+								R.drawable.ic_menu_devoxx_hunty_integration_icon,
+								R.layout.toolbar_menu_item_with_badge_centered_view));
 			} else {
 				menuItem.setVisible(false);
 			}

@@ -2,6 +2,7 @@ package com.devoxx.android.dialog;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devoxx.R;
+import com.devoxx.data.schedule.filter.model.RealmScheduleCustomFilter;
 import com.devoxx.data.schedule.filter.model.RealmScheduleDayItemFilter;
 import com.devoxx.data.schedule.filter.model.RealmScheduleTrackItemFilter;
 
@@ -23,6 +24,8 @@ public class FiltersDialog {
 
 		void onTrackFiltersChanged(RealmScheduleTrackItemFilter itemFilter, boolean isActive);
 
+		void onCustomFiltersChanged(RealmScheduleCustomFilter itemFilter, boolean isActive);
+
 		void onFiltersCleared();
 
 		void onFiltersDismissed();
@@ -34,6 +37,7 @@ public class FiltersDialog {
 			final Context context,
 			final List<RealmScheduleDayItemFilter> daysFilters,
 			final List<RealmScheduleTrackItemFilter> tracksFilters,
+			final List<RealmScheduleCustomFilter> customFilters,
 			final IFiltersChangedListener globalListener) {
 
 		final MaterialDialog md = new MaterialDialog.Builder(context)
@@ -50,9 +54,11 @@ public class FiltersDialog {
 		final View customView = md.getCustomView();
 		final ViewGroup daysContainer = (ViewGroup) customView.findViewById(R.id.dialogFitlersDays);
 		final ViewGroup tracksContainer = (ViewGroup) customView.findViewById(R.id.dialogFitlersTracks);
+		final ViewGroup customsContainer = (ViewGroup) customView.findViewById(R.id.dialogFitlersCustoms);
 
 		setupListeners(customView, daysContainer, tracksContainer);
-		setupCheckBoxes(context, daysFilters, tracksFilters, globalListener, daysContainer, tracksContainer);
+		setupCheckBoxes(context, daysFilters, tracksFilters, customFilters,
+				globalListener, daysContainer, tracksContainer, customsContainer);
 
 		md.show();
 
@@ -63,9 +69,17 @@ public class FiltersDialog {
 			Context context,
 			List<RealmScheduleDayItemFilter> daysFilters,
 			List<RealmScheduleTrackItemFilter> tracksFilters,
-			IFiltersChangedListener globalListener,
-			ViewGroup daysContainer, ViewGroup tracksContainer) {
+			List<RealmScheduleCustomFilter> customFilters, IFiltersChangedListener globalListener,
+			ViewGroup daysContainer, ViewGroup tracksContainer, ViewGroup customsContainer) {
+
 		final LayoutInflater li = LayoutInflater.from(context);
+
+		for (RealmScheduleCustomFilter customFilter : customFilters) {
+			customsContainer.addView(createFilterItemView(li, customsContainer, (buttonView, isChecked) ->
+							globalListener.onCustomFiltersChanged(customFilter, isChecked),
+					customFilter.isActive(), customFilter.getLabel()));
+		}
+
 		for (RealmScheduleDayItemFilter dayFilter : daysFilters) {
 			daysContainer.addView(createFilterItemView(li, daysContainer, (buttonView, isChecked) ->
 							globalListener.onDayFiltersChanged(dayFilter, isChecked),

@@ -91,6 +91,23 @@ public class SlotApiModel implements Serializable {
 		}
 	}
 
+	@Override public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SlotApiModel that = (SlotApiModel) o;
+
+		if (roomId != null ? !roomId.equals(that.roomId) : that.roomId != null) return false;
+		return slotId != null ? slotId.equals(that.slotId) : that.slotId == null;
+
+	}
+
+	@Override public int hashCode() {
+		int result = roomId != null ? roomId.hashCode() : 0;
+		result = 31 * result + (slotId != null ? slotId.hashCode() : 0);
+		return result;
+	}
+
 	@Override
 	public String toString() {
 		return "SlotApiModel{" +

@@ -71,7 +71,10 @@ public class ScheduleLineupDataCreator {
 			final long startTime = sortedKey.first;
 			final long endTime = sortedKey.second;
 
-			final List<SlotApiModel> models = map.get(sortedKey);
+			final List<SlotApiModel> preModels = map.get(sortedKey);
+			final List<SlotApiModel> models = Stream.of(preModels)
+					.distinct().collect(Collectors.toList());
+
 			final int size = models.size();
 
 			if (isBreak(models)) {
@@ -104,7 +107,7 @@ public class ScheduleLineupDataCreator {
 	}
 
 	private boolean isRunningItem(ScheduleItem scheduleItem) {
-		final long currentTime = conferenceManager.getNow();
+		final long currentTime = ConferenceManager.getNow();
 		return scheduleItem.getStartTime() <= currentTime
 				&& scheduleItem.getEndTime() >= currentTime;
 	}
@@ -120,8 +123,7 @@ public class ScheduleLineupDataCreator {
 		return result;
 	}
 
-	private static Collector<SlotApiModel, ?,
-			Map<TripleTuple<Long, Long, String>, List<SlotApiModel>>> createTriplesCollector() {
+	private static Collector<SlotApiModel, ?, Map<TripleTuple<Long, Long, String>, List<SlotApiModel>>> createTriplesCollector() {
 		return Collectors.groupingBy(new Function<SlotApiModel, TripleTuple<Long, Long, String>>() {
 			@Override
 			public TripleTuple<Long, Long, String> apply(SlotApiModel value) {

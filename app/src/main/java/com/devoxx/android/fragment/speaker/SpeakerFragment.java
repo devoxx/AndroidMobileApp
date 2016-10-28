@@ -128,34 +128,38 @@ public class SpeakerFragment extends BaseFragment implements AppBarLayout.OnOffs
 	public void setupFragment(final String uuid) {
 		final String id = conferenceManager.getActiveConferenceId().get();
 		speakersDataManager.fetchSpeakerAsync(id, uuid,
-				new AbstractDataManager.IDataManagerListener<RealmSpeaker>() {
-					@Override
-					public void onDataStartFetching() {
+						new AbstractDataManager.IDataManagerListener<RealmSpeaker>() {
+							@Override
+							public void onDataStartFetching() {
 
-					}
+							}
 
-					@Override
-					public void onDataAvailable(List<RealmSpeaker> items) {
-						throw new IllegalStateException("Should not be here!");
-					}
+							@Override
+							public void onDataAvailable(List<RealmSpeaker> items) {
+								throw new IllegalStateException("Should not be here!");
+							}
 
-					@Override
-					public void onDataAvailable(RealmSpeaker item) {
-						if (isAdded() && getActivity() != null && getContext() != null) {
-							final RealmSpeaker speaker = speakersDataManager.getByUuid(uuid);
-							setupView(speaker);
-						}
-					}
+							@Override
+							public void onDataAvailable(RealmSpeaker item) {
+								if (isAdded() && getActivity() != null && getContext() != null) {
+									final RealmSpeaker speaker = speakersDataManager.getByUuid(uuid);
+									if (speaker != null) {
+										setupView(speaker);
+									} else {
+										infoUtil.showToast(R.string.something_went_wrong);
+									}
+								}
+							}
 
-					@Override
-					public void onDataError(IOException e) {
-						if (e instanceof UnknownHostException) {
-							infoUtil.showToast(R.string.connection_error);
-						} else {
-							infoUtil.showToast(R.string.something_went_wrong);
-						}
-					}
-				});
+							@Override
+							public void onDataError(IOException e) {
+								if (e instanceof UnknownHostException) {
+									infoUtil.showToast(R.string.connection_error);
+								} else {
+									infoUtil.showToast(R.string.something_went_wrong);
+								}
+							}
+						});
 	}
 
 	private void setupView(RealmSpeaker speaker) {
@@ -170,14 +174,14 @@ public class SpeakerFragment extends BaseFragment implements AppBarLayout.OnOffs
 		if (!speaker.getAcceptedTalks().isEmpty()) {
 			for (final RealmTalk talkModel : speaker.getAcceptedTalks()) {
 				final Optional<SlotApiModel> slotModelOpt = slotsDataManager.
-						getSlotByTalkId(talkModel.getId());
+								getSlotByTalkId(talkModel.getId());
 				if (slotModelOpt.isPresent()) {
 					final SlotApiModel slotApiModel = slotModelOpt.get();
 					final SpeakerDetailsTalkItem item = SpeakerDetailsTalkItem_.build(getActivity());
 					item.setupView(talkModel.getTrack(), talkModel.getTitle(),
-							slotApiModel.fromTime(), slotApiModel.toTime(), slotApiModel.roomName);
+									slotApiModel.fromTime(), slotApiModel.toTime(), slotApiModel.roomName);
 					item.setOnClickListener(v ->
-							navigator.openTalkDetails(getActivity(), slotApiModel, true));
+									navigator.openTalkDetails(getActivity(), slotApiModel, true));
 					talkSection.addView(item);
 				}
 			}

@@ -9,6 +9,7 @@ import com.devoxx.android.dialog.FiltersDialog;
 import com.devoxx.data.conference.ConferenceManager;
 import com.devoxx.data.model.RealmConference;
 import com.devoxx.data.schedule.filter.ScheduleFilterManager;
+import com.devoxx.data.schedule.filter.model.RealmScheduleCustomFilter;
 import com.devoxx.data.schedule.filter.model.RealmScheduleDayItemFilter;
 import com.devoxx.data.schedule.filter.model.RealmScheduleTrackItemFilter;
 import com.devoxx.integrations.IntegrationProvider;
@@ -41,7 +42,7 @@ import java.util.List;
 
 @EFragment
 public abstract class BaseMenuFragment extends BaseFragment
-		implements FiltersDialog.IFiltersChangedListener {
+				implements FiltersDialog.IFiltersChangedListener {
 
 	@Bean
 	protected ScheduleFilterManager scheduleFilterManager;
@@ -78,7 +79,7 @@ public abstract class BaseMenuFragment extends BaseFragment
 			setupFilterMenuIfNeeded(getContext(), menu);
 			setupSearchViewIfNeeded(menu);
 			integrationProvider.provideIntegrationController()
-					.setupIntegrationToolbarMenuItem(menu);
+							.setupIntegrationToolbarMenuItem(menu);
 		}
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -94,6 +95,11 @@ public abstract class BaseMenuFragment extends BaseFragment
 	}
 
 	@Override
+	public void onCustomFiltersChanged(RealmScheduleCustomFilter itemFilter, boolean isActive) {
+		scheduleFilterManager.updateFilter(itemFilter, isActive);
+	}
+
+	@Override
 	public void onFiltersCleared() {
 		scheduleFilterManager.clearFilters();
 	}
@@ -103,7 +109,7 @@ public abstract class BaseMenuFragment extends BaseFragment
 		if (isActivityLive()) {
 			getActivity().supportInvalidateOptionsMenu();
 			getMainActivity().sendBroadcast(new Intent(
-					ScheduleFilterManager.FILTERS_CHANGED_ACTION));
+							ScheduleFilterManager.FILTERS_CHANGED_ACTION));
 		}
 	}
 
@@ -120,9 +126,9 @@ public abstract class BaseMenuFragment extends BaseFragment
 		final LayoutInflater inflater = LayoutInflater.from(context);
 		final RelativeLayout rl = new RelativeLayout(context);
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT));
+						ViewGroup.LayoutParams.WRAP_CONTENT));
 		final RelativeLayout view = (RelativeLayout) inflater.inflate(
-				textResId, rl, true);
+						textResId, rl, true);
 		view.setBackgroundResource(backgroundImageId);
 
 		final TextView textView = (TextView) view.findViewById(R.id.count);
@@ -133,8 +139,8 @@ public abstract class BaseMenuFragment extends BaseFragment
 		}
 
 		view.measure(
-				View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-				View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+						View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+						View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 		view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
 
 		view.setDrawingCacheEnabled(true);
@@ -149,9 +155,9 @@ public abstract class BaseMenuFragment extends BaseFragment
 		MenuItem menuItem = menu.findItem(R.id.action_filter);
 		if (menuItem != null) {
 			if (scheduleFilterManager.isSomeFiltersActive()) {
-				final int activeFiltersCount = scheduleFilterManager.unselectedFiltersCount();
+				final int activeFiltersCount = scheduleFilterManager.activeFiltersCount();
 				menuItem.setIcon(buildCounterDrawable(context, activeFiltersCount, R.drawable.ic_filter_white_24px,
-						R.layout.toolbar_menu_item_with_badge_view));
+								R.layout.toolbar_menu_item_with_badge_view));
 			} else {
 				menu.findItem(R.id.action_filter).setIcon(R.drawable.ic_filter_outline_white_24px);
 			}
@@ -231,14 +237,15 @@ public abstract class BaseMenuFragment extends BaseFragment
 	protected void onFilterClicked() {
 		final List<RealmScheduleDayItemFilter> dayFilters = scheduleFilterManager.getDayFilters();
 		final List<RealmScheduleTrackItemFilter> trackFilters = scheduleFilterManager.getTrackFilters();
-		filtersDialog = FiltersDialog.showFiltersDialog(getContext(), dayFilters, trackFilters, this);
+		final List<RealmScheduleCustomFilter> customFilters = scheduleFilterManager.getCustomFilters();
+		filtersDialog = FiltersDialog.showFiltersDialog(getContext(), dayFilters, trackFilters, customFilters, this);
 	}
 
 	@OptionsItem(R.id.action_integration)
 	protected void onIntegrationIconClick() {
 		integrationProvider.provideIntegrationController()
-				.handleToolbarIconClick(conferenceManager.getActiveConference()
-						.get().getIntegrationId(), getActivity());
+						.handleToolbarIconClick(conferenceManager.getActiveConference()
+										.get().getIntegrationId(), getActivity());
 	}
 
 	@OptionsItem(R.id.action_settings)

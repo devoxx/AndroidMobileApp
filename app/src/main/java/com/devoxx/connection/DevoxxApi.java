@@ -1,9 +1,6 @@
 package com.devoxx.connection;
 
 import com.devoxx.connection.model.ConferenceSingleApiModel;
-import com.devoxx.connection.model.ConferencesApiModel;
-import com.devoxx.connection.model.LinkApiModel;
-import com.devoxx.connection.model.ProposalTypesApiModel;
 import com.devoxx.connection.model.SpeakerFullApiModel;
 import com.devoxx.connection.model.SpeakerShortApiModel;
 import com.devoxx.connection.model.SpecificScheduleApiModel;
@@ -35,11 +32,6 @@ public interface DevoxxApi {
 			@Path("uuid") String uuid
 	);
 
-	@GET("/api/conferences/{confCode}/speakers/{uuid}") Call<SpeakerFullApiModel> speakerModel(
-			@Path("confCode") String confCode,
-			@Path("uuid") String uuid
-	);
-
 	@GET Call<SpeakerFullApiModel> speaker(
 			@Url String url
 	);
@@ -48,17 +40,7 @@ public interface DevoxxApi {
 			@Path("confCode") String confCode
 	);
 
-	@GET("/api/conferences") Call<ConferencesApiModel> conferences();
-
 	@GET("/api/conferences/{confCode}") Call<ConferenceSingleApiModel> conference(
-			@Path("confCode") String confCode
-	);
-
-	@GET("api/conferences/{confCode}/schedules") Call<List<LinkApiModel>> schedules(
-			@Path("confCOde") String confCode
-	);
-
-	@GET("/api/conferences/{confCode}/proposalTypes") Call<ProposalTypesApiModel> proposalTypes(
 			@Path("confCode") String confCode
 	);
 

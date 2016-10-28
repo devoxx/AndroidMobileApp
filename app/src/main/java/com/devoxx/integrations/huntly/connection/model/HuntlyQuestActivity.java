@@ -2,6 +2,7 @@ package com.devoxx.integrations.huntly.connection.model;
 
 import com.devoxx.integrations.huntly.storage.RealmHuntlyQuestActivity;
 
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import java.io.Serializable;
@@ -22,7 +23,12 @@ public class HuntlyQuestActivity implements Serializable {
 	private int performedActivities;
 	private int maxActivities;
 
+	@Nullable
 	public static HuntlyQuestActivity fromDb(RealmHuntlyQuestActivity quest) {
+		if (quest == null) {
+			return null;
+		}
+
 		final HuntlyQuestActivity result = new HuntlyQuestActivity();
 		result.activity = quest.getActivity();
 		result.questId = quest.getQuestId();
@@ -50,5 +56,15 @@ public class HuntlyQuestActivity implements Serializable {
 
 	public int getMaxActivities() {
 		return maxActivities;
+	}
+
+	@Override public String toString() {
+		return "HuntlyQuestActivity{" +
+				"activity='" + activity + '\'' +
+				", questId=" + questId +
+				", singleReward=" + singleReward +
+				", performedActivities=" + performedActivities +
+				", maxActivities=" + maxActivities +
+				'}';
 	}
 }

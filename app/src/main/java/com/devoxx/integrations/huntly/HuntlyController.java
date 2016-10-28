@@ -1,6 +1,7 @@
 package com.devoxx.integrations.huntly;
 
 import com.annimon.stream.Optional;
+import com.devoxx.BuildConfig;
 import com.devoxx.data.RealmProvider;
 import com.devoxx.data.register.BaseExtractor;
 import com.devoxx.integrations.huntly.connection.HuntlyConnection;
@@ -65,7 +66,7 @@ public class HuntlyController {
 	}
 
 	@Background void updateUserProfileAsync(String confId, String finalCode,
-																					BaseExtractor infoExtractor) {
+	                                        BaseExtractor infoExtractor) {
 		if (!isEventIdAvailable()) {
 			return;
 		}
@@ -157,7 +158,7 @@ public class HuntlyController {
 		}
 	}
 
-	HuntlyQuestActivity getVoteQuest() {
+	@Nullable HuntlyQuestActivity getVoteQuest() {
 		return getQuest(HuntlyQuestActivity.QUEST_ACTIVITY_VOTE);
 	}
 
@@ -182,7 +183,7 @@ public class HuntlyController {
 		return isQuestAvailable(HuntlyQuestActivity.QUEST_ACTIVITY_FIRST_RUN);
 	}
 
-	HuntlyQuestActivity getFirstRunQuest() {
+	@Nullable HuntlyQuestActivity getFirstRunQuest() {
 		return getQuest(HuntlyQuestActivity.QUEST_ACTIVITY_FIRST_RUN);
 	}
 
@@ -192,6 +193,16 @@ public class HuntlyController {
 			fetchActivities(confCode);
 			fetchPromoText(confCode);
 			updateUserStats(null);
+
+			logDataInfo();
+		}
+	}
+
+	private void logDataInfo() {
+		if (BuildConfig.DEBUG) {
+			Logger.l("Huntly integration info, firstRunQuest: "
+					+ getQuest(HuntlyQuestActivity.QUEST_ACTIVITY_FIRST_RUN)
+					+ "\n" + "voteQuest: " + getQuest(HuntlyQuestActivity.QUEST_ACTIVITY_VOTE));
 		}
 	}
 
@@ -256,8 +267,9 @@ public class HuntlyController {
 		final Realm realm = realmProvider.getRealm();
 		final RealmHuntlyUserStats stats = realm.where(RealmHuntlyUserStats.class).findFirst();
 		final HuntlyUserStats result = HuntlyUserStats.fromDb(stats);
+		final Optional<HuntlyUserStats> res = Optional.ofNullable(result);
 		realm.close();
-		return Optional.ofNullable(result);
+		return res;
 	}
 
 	HuntlyDeepLinkConf currentDeepLinks(String activeConferenceID) {
@@ -309,12 +321,14 @@ public class HuntlyController {
 		}
 	}
 
+	@Nullable
 	private HuntlyQuestActivity getQuest(@HuntlyQuestActivity.QuestActivity String activity) {
 		final Realm realm = realmProvider.getRealm();
 		final RealmHuntlyQuestActivity quest = realm.where(RealmHuntlyQuestActivity.class)
 				.equalTo("activity", activity, Case.INSENSITIVE).findFirst();
+		final HuntlyQuestActivity result = HuntlyQuestActivity.fromDb(quest);
 		realm.close();
-		return HuntlyQuestActivity.fromDb(quest);
+		return result;
 	}
 
 	private boolean isQuestAvailable(@HuntlyQuestActivity.QuestActivity String activity) {
@@ -325,7 +339,9 @@ public class HuntlyController {
 		boolean result = false;
 		if (count > 0) {
 			final HuntlyQuestActivity quest = getQuest(activity);
-			result = quest.getPerformedActivities() < quest.getMaxActivities();
+			if (quest != null) {
+				result = quest.getPerformedActivities() < quest.getMaxActivities();
+			}
 		}
 		return result;
 	}

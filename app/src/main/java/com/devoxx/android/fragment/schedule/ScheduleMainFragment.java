@@ -18,6 +18,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.ColorRes;
+import org.joda.time.DateTime;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -160,7 +161,10 @@ public class ScheduleMainFragment extends BaseMenuFragment
 		final List<ConferenceDay> result = new ArrayList<>();
 		for (ConferenceDay day : days) {
 			for (RealmScheduleDayItemFilter filter : filters) {
-				if (filter.getLabel().equalsIgnoreCase(day.getName())) {
+				final DateTime filterDate = new DateTime(filter.getDayMs());
+				final DateTime confDate = new DateTime(day.getDayMs());
+
+				if (filterDate.equals(confDate)) {
 					result.add(day);
 				}
 			}
