@@ -7,123 +7,138 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class SlotApiModel implements Serializable {
+public class SlotApiModel implements Serializable, Comparable<SlotApiModel> {
 
-	/* nullability is mutually exclusive with talk field */
-	@SerializedName("break")
-	public BreakApiModel slotBreak;
+    /* nullability is mutually exclusive with talk field */
+    @SerializedName("break")
+    public BreakApiModel slotBreak;
 
-	/* nullability is mutually exclusive with talk break */
-	public TalkFullApiModel talk;
+    /* nullability is mutually exclusive with talk break */
+    public TalkFullApiModel talk;
 
-	public String roomId;
-	public String roomSetup;
-	public String toTime;
-	public String fromTime;
-	public String roomName;
-	public String slotId;
-	public String day;
-	public boolean notAllocated;
-	long fromTimeMillis;
-	long toTimeMillis;
-	public int roomCapacity;
+    public String roomId;
+    public String roomSetup;
+    public String toTime;
+    public String fromTime;
+    public String roomName;
+    public String slotId;
+    public String day;
+    public boolean notAllocated;
+    long fromTimeMillis;
+    long toTimeMillis;
+    public int roomCapacity;
 
-	public DateTime fromTime() {
-		return new DateTime(fromTimeMillis);
-	}
+    public DateTime fromTime() {
+        return new DateTime(fromTimeMillis);
+    }
 
-	public DateTime toTime() {
-		return new DateTime(toTimeMillis);
-	}
+    public DateTime toTime() {
+        return new DateTime(toTimeMillis);
+    }
 
-	public long fromTimeMs() {
-		return fromTimeMillis;
-	}
+    public long fromTimeMs() {
+        return fromTimeMillis;
+    }
 
-	public long toTimeMs() {
-		return toTimeMillis;
-	}
+    public long toTimeMs() {
+        return toTimeMillis;
+    }
 
-	public boolean isBreak() {
-		return slotBreak != null && talk == null;
-	}
+    public boolean isBreak() {
+        return slotBreak != null && talk == null;
+    }
 
-	public boolean isTalk() {
-		return slotBreak == null && talk != null;
-	}
+    public boolean isTalk() {
+        return slotBreak == null && talk != null;
+    }
 
-	public static class SameModelPredicate implements Predicate<SlotApiModel> {
 
-		private String id;
+    public static class SameModelPredicate implements Predicate<SlotApiModel> {
 
-		public SameModelPredicate(String id) {
-			this.id = id;
-		}
+        private String id;
 
-		@Override
-		public boolean test(SlotApiModel value) {
-			return value.slotId.equals(id);
-		}
-	}
+        public SameModelPredicate(String id) {
+            this.id = id;
+        }
 
-	public static class FilterPredicate implements Predicate<SlotApiModel> {
+        @Override
+        public boolean test(SlotApiModel value) {
+            return value.slotId.equals(id);
+        }
+    }
 
-		private String query;
+    public static class FilterPredicate implements Predicate<SlotApiModel> {
 
-		public FilterPredicate() {
+        private String query;
 
-		}
+        public FilterPredicate() {
 
-		public FilterPredicate(String query) {
-			this.query = query;
-		}
+        }
 
-		public void setQuery(String query) {
-			this.query = query;
-		}
+        public FilterPredicate(String query) {
+            this.query = query;
+        }
 
-		@Override
-		public boolean test(SlotApiModel value) {
-			return value.isTalk() && (value.talk.track.toLowerCase().contains(query)
-					|| value.talk.title.toLowerCase().contains(query)
-					|| value.talk.getReadableSpeakers().toLowerCase().contains(query)
-					|| value.talk.summary.toLowerCase().contains(query));
-		}
-	}
+        public void setQuery(String query) {
+            this.query = query;
+        }
 
-	@Override public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+        @Override
+        public boolean test(SlotApiModel value) {
+            return value.isTalk() && (value.talk.track.toLowerCase().contains(query)
+                    || value.talk.title.toLowerCase().contains(query)
+                    || value.talk.getReadableSpeakers().toLowerCase().contains(query)
+                    || value.talk.summary.toLowerCase().contains(query));
+        }
+    }
 
-		SlotApiModel that = (SlotApiModel) o;
+    @Override
+    public int compareTo(SlotApiModel another) {
+        if (this.fromTimeMs() > another.fromTimeMs()) {
+            return 1;
+        } else if (this.fromTimeMs() < another.fromTimeMs()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 
-		if (roomId != null ? !roomId.equals(that.roomId) : that.roomId != null) return false;
-		return slotId != null ? slotId.equals(that.slotId) : that.slotId == null;
 
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	@Override public int hashCode() {
-		int result = roomId != null ? roomId.hashCode() : 0;
-		result = 31 * result + (slotId != null ? slotId.hashCode() : 0);
-		return result;
-	}
+        SlotApiModel that = (SlotApiModel) o;
 
-	@Override
-	public String toString() {
-		return "SlotApiModel{" +
-				"slotBreak=" + slotBreak +
-				", talk=" + talk +
-				", roomId='" + roomId + '\'' +
-				", roomSetup='" + roomSetup + '\'' +
-				", toTime='" + toTime + '\'' +
-				", fromTime='" + fromTime + '\'' +
-				", roomName='" + roomName + '\'' +
-				", slotId='" + slotId + '\'' +
-				", day='" + day + '\'' +
-				", notAllocated=" + notAllocated +
-				", fromTimeMillis=" + fromTimeMillis +
-				", toTimeMillis=" + toTimeMillis +
-				", roomCapacity=" + roomCapacity +
-				'}';
-	}
+        if (roomId != null ? !roomId.equals(that.roomId) : that.roomId != null) return false;
+        return slotId != null ? slotId.equals(that.slotId) : that.slotId == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = roomId != null ? roomId.hashCode() : 0;
+        result = 31 * result + (slotId != null ? slotId.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SlotApiModel{" +
+                "slotBreak=" + slotBreak +
+                ", talk=" + talk +
+                ", roomId='" + roomId + '\'' +
+                ", roomSetup='" + roomSetup + '\'' +
+                ", toTime='" + toTime + '\'' +
+                ", fromTime='" + fromTime + '\'' +
+                ", roomName='" + roomName + '\'' +
+                ", slotId='" + slotId + '\'' +
+                ", day='" + day + '\'' +
+                ", notAllocated=" + notAllocated +
+                ", fromTimeMillis=" + fromTimeMillis +
+                ", toTimeMillis=" + toTimeMillis +
+                ", roomCapacity=" + roomCapacity +
+                '}';
+    }
 }

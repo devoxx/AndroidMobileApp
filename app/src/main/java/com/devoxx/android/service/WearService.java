@@ -1,11 +1,22 @@
 package com.devoxx.android.service;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
+
 import com.annimon.stream.Optional;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
+import com.devoxx.android.adapter.schedule.model.creator.ScheduleLineupDataCreator;
 import com.devoxx.common.utils.Constants;
 import com.devoxx.common.wear.GoogleApiConnector;
 import com.devoxx.connection.model.SlotApiModel;
@@ -28,20 +39,11 @@ import com.google.android.gms.wearable.WearableListenerService;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -57,6 +59,9 @@ public class WearService extends WearableListenerService {
 
 	@Bean
 	SlotsDataManager slotsDataManager;
+
+	@Bean
+	ScheduleLineupDataCreator scheduleLineupDataCreator;
 
 	@Bean
 	SpeakersDataManager speakersDataManager;
@@ -212,6 +217,9 @@ public class WearService extends WearableListenerService {
 			// not found
 			return;
 		}
+
+
+		Collections.sort(slotApiModelList);
 
 
 		final PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(Constants.CHANNEL_ID + Constants.SLOTS_PATH + "/" + dayMs);
